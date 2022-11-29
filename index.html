@@ -8,32 +8,62 @@
             html,body{
                 margin:0;
                 height:100%;
+                overflow:hidden;
             }
             #shadowbox{
                 border-radius:100%;
-                background:#555;
             }
             #option{
                 position:absolute;
                 z-index:3;
                 background:rgba(0,0,0,0.2);
                 top:0;
+                right:0;
                 padding:20px;
-                width:calc(100% - 40px);
+                overflow:auto;
+                min-height:auto;
+                max-height:calc(100% - 40px);
+                font-size:13px;
             }
             .range{
-                width:200px;
+                width:170px;
             }
             .input{
-                width:30px;
+                width:35px;
                 border:1px solid #aaa;
-                border-radius:5px;
+                border-radius:10px;
                 margin:5px;
-                padding:2px;
+                padding:5px;
+            }
+            #option button{
+                padding:10px;
+                background:rgb(46, 102, 255);
+                color:#fff;
+                border:0;
+                border-radius:5px;
+                font-size:15px;
+                margin:10px;
+            }
+            #option .optsw{
+                display:inline-block;
+                font-size:20px;
+                user-select:none;
+            }
+            #option .optsw:hover{
+                font-weight:bolder;
+            }
+            #inputtext{
+                border:1px solid #aaa;
+                border-radius:10px;
+                padding:5px;
+                min-width:calc(100% - 10px);
+                max-width:calc(100% - 10px);
+                min-height:50px;
             }
             hr{
                 border:0.5px solid #aaa;
             }
+
         </style>
         <style id="animationset"></style>
     </head>
@@ -46,31 +76,48 @@
         <!--右上角选项按钮-->
         <div id="tips" style="position:absolute;top:5px;right:65px;display:none">点击此处进入选项→</div>
         <button id="optbtn" style="border:none;background:rgba(0,0,0,0.4);color:#fff;position:absolute;top
-        :0px;right:0px;padding:5px 15px 5px 15px;font-size:15px;display:none" onclick="document.getElementById('option').style.display = 'block';this.style.display = 'none';document.getElementById('tips').remove();">选项</button>
+        :0px;right:0px;padding:5px 15px 5px 15px;font-size:15px;display:none" onclick="
+            document.getElementById('option').style.display = 'block';
+            this.style.display = 'none';
+            document.getElementById('tips').remove();
+        ">选项</button>
 
         <div id="option">
-            <div style="">
-                <!--效果设置-->
-                X轴：<br><input id='Xanglerange' class="range" type='range' min='0' max='360' oninput="anglechange('xrange')"/><input id='Xangleinput' class="input" value='0' oninput='anglechange()'/>°<hr>
-                Z轴：<br><input id='Zanglerange' class="range" type='range' min='0' max='360' oninput="anglechange('zrange')"/><input id='Zangleinput' class="input" value='0' oninput='anglechange()'/>°<hr>
-                透视：<br><input id='perspectrange' class="range" type='range' min='0' max='1000' oninput="anglechange('prange')"/><input id='perspectinput' class="input" value='500' oninput='anglechange()'/>像素<hr>
-                速度：<br><input id='speedrange' class="range" type='range' min='1' max='10000' oninput="anispeed('range')"/><input id='speedinput' class="input" value='1.3' oninput='anispeed()'/>秒
+            <div class="optsw" id="imgopt_sw" onclick="showmode(this.id)">图片</div>
+            <div style="display:inline-block;width:20px;"></div>
+            <div class="optsw" id="txtopt_sw" onclick="showmode(this.id)">文本或 HTML</div>
+            <div style="height:10px"></div>
+
+            <!--文字/代码设置界面-->
+            <div id="txtopt">
+                <p style='margin-bottom:5px'>如需换行，请使用“&lt;br&gt;”</p>
+                <textarea rows="5" id="inputtext" oninput="applytext()">旋转 の 页面</textarea>
+                字体大小：<br><input id='textsizerange' class="range" type='range' min='0' max='360' value='72' oninput="applytext('sizerange')"/><input id='textsizeinput' class="input" value="72" oninput='applytext()'/>像素
             </div>
 
-            <div>
-                <!--文字/代码设置界面-->
-                <p style="margin:5px;font-size:20px;text-align:center">文本或 HTML</p>
-                <p style='margin:5px;text-align:center'>如需换行，请使用“&lt;/br&gt;”</p>
-                <textarea rows="5" id="inputtext" style="width:100%" oninput="applytext()">旋转 の 页面</textarea>
-                字体大小：<input id='textsizerange' class="range" type='range' min='0' max='360' value='72' oninput="applytext('sizerange')"/><input id='textsizeinput' class="input" value="72" class="input" oninput='applytext()'/>像素
-
-                <!--图片设置界面-->
-                <p style="margin:5px;font-size:20px;text-align:center">图片</p>
-                <p style='margin:5px;text-align:center'>图片大小不建议超过2M，否则浏览器会卡顿甚至闪退</p>
-                <div><input id='anyinput' type='file' style='width:100%;border:2px solid #ccc;background:#ccc'/></div>
-                宽度<br><input id='range' class="range" type='range' min='0' max='500' value='150' oninput='applyimg()'/><input id='userwidth' value='150' class="input" oninput='applyimg()'/> 像素
+            <!--图片设置界面-->
+            <div id="imgopt">
+                <div id="imgopt_user">
+                    <p style='margin:5px;text-align:center'>图片大小不建议超过2M，否则浏览器会卡顿甚至闪退</p>
+                    <div style="text-align:center"><button style="width:150px" onclick="document.getElementById('anyinput').click()">＋ 选择本地文件</button></div>
+                    <input id='anyinput' style="display:none" type='file'/>
+                </div>
+                宽度：<input id='range' class="range" type='range' min='0' max='500' value='150' oninput='applyimg()'/><input id='userwidth' value='150' class="input" oninput='applyimg()'/>像素
             </div>
-            <button style="margin-left:calc(50% - 50px);width:100px;background:rgb(46, 102, 255);color:#fff;border:0;border-radius:5px;height:30px;font-size:15px" onclick="document.getElementById('option').style.display = 'none';document.getElementById('optbtn').style.display = 'block';document.getElementById('tips').style.display = 'block'">关闭</button>
+            
+            <!--效果设置-->
+            <hr>
+            X轴：<input id='Xanglerange' class="range" type='range' min='0' max='360' oninput="anglechange('xrange')"/><input id='Xangleinput' class="input" value='0' oninput='anglechange()'/>°<hr>
+            Z轴：<input id='Zanglerange' class="range" type='range' min='0' max='360' oninput="anglechange('zrange')"/><input id='Zangleinput' class="input" value='0' oninput='anglechange()'/>°<hr>
+            透视：<input id='perspectrange' class="range" type='range' min='0' max='1000' oninput="anglechange('prange')"/><input id='perspectinput' class="input" value='500' oninput='anglechange()'/>像素<hr>
+            速度：<input id='speedrange' class="range" type='range' min='0' max='9999' oninput="anispeed('range')"/><input id='speedinput' class="input" value='1.3' oninput='anispeed()'/>秒/转<hr>
+            <p style='margin-bottom:5px'>将透视调整至75~125可以提升图像或文字的立体感。</p>
+            <div onclick="setTimeout('reverse_shadow_sw()',10)"><input type="checkbox" id="reverse_sw"/><label for="reverse_sw"> 反向</label>&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="shadow_sw"/><label for="shadow_sw"> 阴影</label></div>
+            <div style="text-align:center;margin-top:10px;"><button style="width:150px" onclick="
+                document.getElementById('option').style.display = 'none';
+                document.getElementById('optbtn').style.display = 'block';
+                document.getElementById('tips').style.display = 'block'
+            ">关闭</button></div>
         </div>
 
         <script type="text/JavaScript">
@@ -82,6 +129,11 @@
                 var shadowbox = document.getElementById("shadowbox");
                 var winbody = document.body;
                 if(winbody.clientWidth - winbody.clientHeight!=lastsize){
+                    if(winbody.clientWidth>=360){
+                        document.getElementById("option").style.width = "320px";
+                    }else{
+                        document.getElementById("option").style.width = "calc(100% - 40px)";
+                    }
                     if(document.getElementById("showimg")){
                         boxWidth = document.getElementById("showimg").clientWidth;
                         boxHeight = document.getElementById("showimg").clientHeight;
@@ -98,14 +150,13 @@
                     shadowbox.style.height = boxHeight / 5 + "px";
                     document.getElementById("title").innerHTML = "万物皆可旋转（" + rotationbox.style.width + " x " + rotationbox.style.height + "）";
                     headheight = (winbody.clientHeight - rotationbox.clientHeight) / 2
-                    anglechange();
                     rotationbox.style.marginLeft = (winbody.clientWidth - rotationbox.clientWidth) / 2 + "px";
                     shadowbox.style.marginLeft = (winbody.clientWidth - rotationbox.clientWidth) / 2 + "px";
                     lastsize = winbody.clientWidth - winbody.clientHeight
+                    anglechange();
                 }
                 setTimeout(function(){resizebox()},25)
             }
-            resizebox();
             
             //旋转框架角度/透视
             function anglechange(mode){
@@ -127,26 +178,75 @@
                     zrange.value = Number(zinput.value) + 180;
                     prange.value = 1000 - pinput.value;
                 }
-                aniset.innerHTML = "@keyframes headanimation{0%{height:" + headheight + "px}50%{height:" + Number(headheight - 40) + "px}100%{height:" + headheight + "px}}@keyframes shadowanimation{0%{filter:blur(20px);margin-top:20px}50%{filter:blur(30px);margin-top:60px}100%{filter:blur(20px);margin-top:20px}}@keyframes boxanimation{0%{transform:perspective(" + pinput.value + "px) rotateX(" + xinput.value + "deg) rotateY(0deg) rotateZ(" + zinput.value + "deg)}100%{transform:perspective(" + pinput.value + "px) rotateX(" + xinput.value + "deg) rotateY(360deg) rotateZ(" + zinput.value + "deg)}}"
+                aniset.innerHTML = "@keyframes headanimation{0%{height:" + headheight + "px}50%{height:" + Number(headheight - 40) + "px}100%{height:" + headheight + "px}}  @keyframes shadowanimation{0%{filter:blur(20px);margin-top:20px}50%{filter:blur(30px);margin-top:60px}100%{filter:blur(20px);margin-top:20px}}  @keyframes boxanimation{0%{transform:perspective(" + pinput.value + "px) rotateX(" + xinput.value + "deg) rotateY(" + rotate_start_angle + "deg) rotateZ(" + zinput.value + "deg)}100%{transform:perspective(" + pinput.value + "px) rotateX(" + xinput.value + "deg) rotateY(" + rotate_end_angle + "deg) rotateZ(" + zinput.value + "deg)}}"
             }
 
+            //动画速度
             function anispeed(mode){
                 var input = document.getElementById("speedinput");
                 var range = document.getElementById("speedrange")
-                if(mode=="range"){input.value = range.value / 1000;}
-                else{range.value = input.value * 1000;}
+                if(mode=="range"){input.value = 10 - range.value / 1000;}
+                else{range.value = (10 - input.value) * 1000;}
                 document.getElementById("rotationbox").style.animation = "boxanimation " + input.value + "s infinite linear";
                 document.getElementById("shadowbox").style.animation = "shadowanimation " + input.value * 1.5 + "s infinite linear";;
                 document.getElementById("headbox").style.animation = "headanimation " + input.value * 1.5 + "s infinite linear";;
             }
+
+            //阴影和正反转
+            function reverse_shadow_sw(mode){
+                if(document.getElementById("shadow_sw").checked){
+                    document.getElementById("shadowbox").style.background = "#555";
+                }else{
+                    document.getElementById("shadowbox").style.background = "rgba(0,0,0,0)";
+                }
+                if(document.getElementById("reverse_sw").checked){
+                    rotate_start_angle = 0;
+                    rotate_end_angle = 360;
+                }else{
+                    rotate_start_angle = 360;
+                    rotate_end_angle = 0;
+                }
+                if(mode!="load") anglechange();
+
+            }
+
+            //切换图片/文本模式
+            function showmode(name){
+                var txt = document.getElementById("txtopt");
+                var img = document.getElementById("imgopt");
+                var txtsw = document.getElementById("txtopt_sw");
+                var imgsw = document.getElementById("imgopt_sw");
+                var highlight = "font-weight:bold;padding-bottom:5px;border-bottom:3px solid royalblue";
+                if(name=="txtopt_sw"){
+                    txt.style.display = "block";
+                    img.style.display = "none";
+                    txtsw.style = highlight;
+                    imgsw.style = "";
+                    applytext();
+                }else{
+                    txt.style.display = "none";
+                    img.style.display = "block";
+                    imgsw.style = highlight;
+                    txtsw.style = "";
+                    applyimg();
+                }
+                /*document.getElementById("txtopt").style.display = "none";
+                document.getElementById("imgopt").style.display = "none";
+                document.getElementById("txtopt_sw").style = "";
+                document.getElementById("imgopt_sw").style = "";
+                document.getElementById(name.substring(0,6)).style.display = "block";
+                document.getElementById(name).style = "font-weight:bold;padding-bottom:5px;border-bottom:3px solid royalblue";*/
+            }
+            
             //用户导入图片
             if(window.FileReader){
-                document.body.innerHTML += "";
                 anyimg = document.getElementById("anyinput");
                 anyimg.addEventListener('change',imageget,false);
             }else{
-                alert("您的浏览器不支持自定义图片。");
+                document.getElementById("imgopt_user").innerHTML = "您的浏览器不支持自定义图片。";
             }
+
+            //加载用户图片
             function imageget(){
                 var file = anyimg.files[0];
                 if(!/image\/\w+/.test(file.type)){
@@ -181,10 +281,14 @@
                 txtset.style = "white-space:nowrap;float:left;font-size:" + sizeinput.value + "px;color:";
                 lastsize = 0;
             }
+
+            //初始化
             imgSrc = "./nugget.png"
-            applyimg();
+            document.getElementById("shadow_sw").checked = "true";
+            reverse_shadow_sw("load");
+            resizebox();
+            showmode();
             anispeed();
-            anglechange();
         </script>
     </body>
 </html>
