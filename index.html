@@ -16,7 +16,7 @@
             #option{
                 position:absolute;
                 z-index:3;
-                background:rgba(0,0,0,0.2);
+                background:rgba(123,123,123,0.5);
                 top:0;
                 right:0;
                 padding:20px;
@@ -26,7 +26,8 @@
                 font-size:13px;
             }
             .range{
-                width:170px;
+                min-width:calc(100% - 150px);
+                max-width:100px;
             }
             .input{
                 width:35px;
@@ -43,11 +44,25 @@
                 border-radius:5px;
                 font-size:15px;
                 margin:10px;
+                width:150px;
+                transition-property:all;
+                transition-duration:200ms;
+            }
+            #option button:hover{
+                background:rgb(100, 142, 255);
+            }
+            #option button:active{
+                margin:13px;
+                width:140px;
+                padding:7px;
+                transition-duration:50ms;
             }
             #option .optsw{
                 display:inline-block;
                 font-size:20px;
                 user-select:none;
+                padding-bottom:5px;
+                margin-bottom:10px;
             }
             #option .optsw:hover{
                 font-weight:bolder;
@@ -59,15 +74,75 @@
                 min-width:calc(100% - 10px);
                 max-width:calc(100% - 10px);
                 min-height:50px;
+                max-height:200px;
             }
             hr{
                 border:0.5px solid #aaa;
             }
 
+            
+            #rgbeditor{
+                width:100%;
+                height:100%;
+                top:0px;
+                left:0px;
+                background:rgba(128,128,128,0.5);
+                position:absolute;
+                z-index:114514;
+                display:none;
+            }
+            #rgbeditor_window{
+                width:250px;
+                height:300px;
+                background:#fff;
+                box-shadow:0px 7px 12px rgba(128,128,128,0.5);
+                margin-left:calc(50% - 145px);
+                padding:20px;
+                border:1px solid #ddd;
+                border-radius:5px;
+            }
+            #rgbeditor_window .optsw{
+                display:inline-block;
+                font-size:20px;
+                user-select:none;
+                padding-bottom:5px;
+                margin-bottom:10px;
+            }
+            #rgbeditor_window table{
+                border-collapse:collapse;
+                width:100%;
+            }
+            #rgbeditor_window table td{
+                text-align:right;
+                padding:7px 0 7px 0;
+            }
+            .rgbeditor_input{
+                width:40px;
+                border:1px solid #ccc;
+                border-radius:3px;
+                padding:5px;
+                margin-left:2px;
+            }
+            #bgimg_input_btn{
+                width:120px;
+                border:none;
+                border-radius:3px;
+                background-color:rgb(41, 108, 255);
+                color:white;
+                padding:10px;
+                margin-left:10px;
+            }
+            .rgbeditor_range{
+                width:calc(100% - 5px);
+                margin-left:5px;
+            }
+            .rgbeditor_optname{
+                font-size:15px;
+            }
         </style>
         <style id="animationset"></style>
     </head>
-    <body>
+    <body id="body">
         <!--效果-->
         <div id="headbox"></div>
         <div id="rotationbox"><div style="width:100%;height:100%;background:#ccc"></div></div>
@@ -86,40 +161,95 @@
             <div class="optsw" id="imgopt_sw" onclick="showmode(this.id)">图片</div>
             <div style="display:inline-block;width:20px;"></div>
             <div class="optsw" id="txtopt_sw" onclick="showmode(this.id)">文本或 HTML</div>
-            <div style="height:10px"></div>
 
             <!--文字/代码设置界面-->
             <div id="txtopt">
                 <p style='margin-bottom:5px'>如需换行，请使用“&lt;br&gt;”</p>
                 <textarea rows="5" id="inputtext" oninput="applytext()">旋转 の 页面</textarea>
-                字体大小：<br><input id='textsizerange' class="range" type='range' min='0' max='360' value='72' oninput="applytext('sizerange')"/><input id='textsizeinput' class="input" value="72" oninput='applytext()'/>像素
+                字体大小：<br><input id='textsizerange' class="range" type='range' min='0' max='360' value='72' oninput="applytext('sizerange')"/><div style="display:inline-block"><input id='textsizeinput' class="input" value="72" oninput='applytext()'/>像素<button style="width:auto;padding:5px;font-size:12px" onclick="rgb_id='showtext';rgb_attribute='style.color';coloropt_init('x','opacity')">颜色</button></div>
             </div>
 
             <!--图片设置界面-->
             <div id="imgopt">
                 <div id="imgopt_user">
-                    <p style='margin:5px;text-align:center'>图片大小不建议超过2M，否则浏览器会卡顿甚至闪退</p>
-                    <div style="text-align:center"><button style="width:150px" onclick="document.getElementById('anyinput').click()">＋ 选择本地文件</button></div>
+                    <p style='margin-bottom:5px;text-align:center'>图片大小不建议超过2M，否则浏览器会卡顿甚至闪退</p>
+                    <div style="text-align:center"><button onclick="document.getElementById('anyinput').click()">＋ 选择本地文件</button></div>
                     <input id='anyinput' style="display:none" type='file'/>
                 </div>
-                宽度：<input id='range' class="range" type='range' min='0' max='500' value='150' oninput='applyimg()'/><input id='userwidth' value='150' class="input" oninput='applyimg()'/>像素
+                宽度：<input id='range' class="range" type='range' min='0' max='500' value='150' oninput='applyimg()'/><div style="display:inline-block"><input id='userwidth' value='150' class="input" oninput='applyimg()'/>像素</div>
             </div>
             
             <!--效果设置-->
             <hr>
-            X轴：<input id='Xanglerange' class="range" type='range' min='0' max='360' oninput="anglechange('xrange')"/><input id='Xangleinput' class="input" value='0' oninput='anglechange()'/>°<hr>
-            Z轴：<input id='Zanglerange' class="range" type='range' min='0' max='360' oninput="anglechange('zrange')"/><input id='Zangleinput' class="input" value='0' oninput='anglechange()'/>°<hr>
-            透视：<input id='perspectrange' class="range" type='range' min='0' max='1000' oninput="anglechange('prange')"/><input id='perspectinput' class="input" value='500' oninput='anglechange()'/>像素<hr>
-            速度：<input id='speedrange' class="range" type='range' min='0' max='9999' oninput="anispeed('range')"/><input id='speedinput' class="input" value='1.3' oninput='anispeed()'/>秒/转<hr>
+            
+            X轴：<input id='Xanglerange' class="range" type='range' min='0' max='360' oninput="anglechange('xrange')"/><div style="display:inline-block"><input id='Xangleinput' class="input" value='0' oninput='anglechange()'/>°</div><hr>
+
+            Z轴：<input id='Zanglerange' class="range" type='range' min='0' max='360' oninput="anglechange('zrange')"/><div style="display:inline-block"><input id='Zangleinput' class="input" value='0' oninput='anglechange()'/>°</div><hr>
+
+            透视：<input id='perspectrange' class="range" type='range' min='0' max='1000' oninput="anglechange('prange')"/><div style="display:inline-block"><input id='perspectinput' class="input" value='500' oninput='anglechange()'/>像素</div><hr>
+
+            速度：<input id='speedrange' class="range" type='range' min='0' max='9999' oninput="anispeed('range')"/><div style="display:inline-block"><input id='speedinput' class="input" value='1.3' oninput='anispeed()'/>秒/转</div><hr>
+
             <p style='margin-bottom:5px'>将透视调整至75~125可以提升图像或文字的立体感。</p>
-            <div onclick="setTimeout('reverse_shadow_sw()',10)"><input type="checkbox" id="reverse_sw"/><label for="reverse_sw"> 反向</label>&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="shadow_sw"/><label for="shadow_sw"> 阴影</label></div>
-            <div style="text-align:center;margin-top:10px;"><button style="width:150px" onclick="
+            <div onclick="setTimeout('reverse_shadow_sw()',10)"><input type="checkbox" id="reverse_sw"/><label for="reverse_sw"> 反向</label>&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="shadow_sw"/><label for="shadow_sw"> 阴影</label><button style="padding:5px;font-size:12px" onclick="rgb_id='body';rgb_attribute='style.background';coloropt_init('bgimg')">更改背景</button></div>
+            <div style="text-align:center;margin-top:10px;"><button onclick="
                 document.getElementById('option').style.display = 'none';
                 document.getElementById('optbtn').style.display = 'block';
                 document.getElementById('tips').style.display = 'block'
             ">关闭</button></div>
         </div>
 
+        <!--背景图片/颜色设置界面-->
+        <div id="rgbeditor">
+            <div style="height:calc(50% - 170px);"></div>
+            <div id="rgbeditor_window">
+            <div style="margin-bottom:10px"><span id="bgopt_sw" style="display:none">
+                    <div class="optsw" id="bgimg_sw" onclick="coloropt_mode(this.id)">图片</div>
+                    <div style="display:inline-block;width:20px;"></div>
+                    <div class="optsw" id="rgbedt_sw" onclick="coloropt_mode(this.id)">颜色</div>
+                </span>
+                <button style="float:right;border:none;background:none;padding:0px;margin:0px;font-size:20px;font-weight:bolder;font-family:monospace;color:#555" onclick="document.getElementById('rgbeditor').style.display = 'none'">×</button>
+            </div>
+            <div id="bgimg">
+                <p style='margin-bottom:5px;text-align:center'>图片大小不建议超过2M，否则浏览器会卡顿甚至闪退</p>
+                <div style="text-align:center"><button id="bgimg_input_btn" onclick="document.getElementById('bgimg_input').click()">＋ 选择本地文件</button></div>
+                <input id='bgimg_input' style="display:none" type='file'/>
+            </div>
+            <table id="rgbedt">
+                <tr>
+                    <td class="rgbeditor_optname">红</td>
+                    <td><input type="range" min='0' max='255' class="rgbeditor_range" id="rgbeditor_range_r" oninput="rgbeditor_rgba(this.id)"/></td>
+                    <td><input type="number" class="rgbeditor_input" id="rgbeditor_input_r" oninput="rgbeditor_rgba(this.id)"/></td>
+                </tr>
+                <tr>
+                    <td class="rgbeditor_optname">绿</td>
+                    <td><input type="range" min='0' max='255' class="rgbeditor_range" id="rgbeditor_range_g" oninput="rgbeditor_rgba(this.id)"/></td>
+                    <td><input type="number" class="rgbeditor_input" id="rgbeditor_input_g" oninput="rgbeditor_rgba(this.id)"/></td>
+                </tr>
+                <tr>
+                    <td class="rgbeditor_optname">蓝</td>
+                    <td><input type="range" min='0' max='255' class="rgbeditor_range" id="rgbeditor_range_b" oninput="rgbeditor_rgba(this.id)"/></td>
+                    <td><input type="number" class="rgbeditor_input" id="rgbeditor_input_b" oninput="rgbeditor_rgba(this.id)"/></td>
+                </tr>
+                <tr>
+                    <td class="rgbeditor_optname">16进制</td>
+                    <td colspan="2"><input class="rgbeditor_input" style="width:auto" id="rgbeditor_hex" value="#fff" onblur="rgbeditor_rgba(this.id)"/></td>
+                </tr>
+                <tr id="rgbeditor_opacity" style="display:none">
+                    <td class="rgbeditor_optname">透明度</td>
+                    <td><input type="range" min='0' max='100' class="rgbeditor_range" id="rgbeditor_range_a" oninput="rgbeditor_rgba(this.id)"/></td>
+                    <td><input type="number" class="rgbeditor_input" id="rgbeditor_input_a" oninput="rgbeditor_rgba(this.id)"/></td>
+                </tr>
+                <tr>
+                    <td class="rgbeditor_optname" colspan="2">预览</td>
+                    <td><div class="rgbeditor_input" style="padding:0px;float:right;width:50px;height:25px;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAABFSURBVChTnY/BCQAwCANN53J73cv2IZUqUvA+BhIwgYgYJZjZVbD8fpkFAbiqPEGzUveCYxZXVV0Fbcdcow3mR7PVPUQbAmQQV9LXPVwAAAAASUVORK5CYII=);overflow:hidden"><div id="rgbeditor_preview" style="height:100%;width:100%"></div></div></td>
+                </tr>
+            </table>
+            </div>
+        </div>
+
+        <!--颜色设置脚本-->
+        <script type="text/javascript"src="./rgbeditor.js"></script>
         <script type="text/JavaScript">
             
             //旋转框架尺寸
@@ -216,18 +346,19 @@
                 var img = document.getElementById("imgopt");
                 var txtsw = document.getElementById("txtopt_sw");
                 var imgsw = document.getElementById("imgopt_sw");
-                var highlight = "font-weight:bold;padding-bottom:5px;border-bottom:3px solid royalblue";
+                var highlight = "font-weight:bold;border-bottom:3px solid royalblue";
+                var nolight = "border-bottom:3px solid rgba(0,0,0,0)"
                 if(name=="txtopt_sw"){
                     txt.style.display = "block";
                     img.style.display = "none";
                     txtsw.style = highlight;
-                    imgsw.style = "";
+                    imgsw.style = nolight;
                     applytext();
                 }else{
                     txt.style.display = "none";
                     img.style.display = "block";
                     imgsw.style = highlight;
-                    txtsw.style = "";
+                    txtsw.style = nolight;
                     applyimg();
                 }
                 /*document.getElementById("txtopt").style.display = "none";
@@ -238,13 +369,6 @@
                 document.getElementById(name).style = "font-weight:bold;padding-bottom:5px;border-bottom:3px solid royalblue";*/
             }
             
-            //用户导入图片
-            if(window.FileReader){
-                anyimg = document.getElementById("anyinput");
-                anyimg.addEventListener('change',imageget,false);
-            }else{
-                document.getElementById("imgopt_user").innerHTML = "您的浏览器不支持自定义图片。";
-            }
 
             //加载用户图片
             function imageget(){
@@ -266,6 +390,13 @@
                 var element = "<img src='" + imgSrc + "' id='showimg' style='width:" + document.getElementById("userwidth").value + "px'/>";
                 document.getElementById("rotationbox").innerHTML = element;
                 lastsize = 0;
+                //用户导入图片
+                if(window.FileReader){
+                    anyimg = document.getElementById("anyinput");
+                    anyimg.addEventListener('change',imageget,false);
+                }else{
+                    document.getElementById("imgopt_user").innerHTML = "您的浏览器不支持自定义图片。";
+                }
             }
 
             //应用文字
@@ -274,12 +405,81 @@
                 var sizeinput = document.getElementById("textsizeinput");
                 var sizerange = document.getElementById("textsizerange");
                 var txtinput = document.getElementById("inputtext");
-                document.getElementById("rotationbox").innerHTML = "<div id='showtext'>" + txtinput.value + "</div>"
+                if(document.getElementById("showtext")) document.getElementById("showtext").innerHTML = txtinput.value;
+                else document.getElementById("rotationbox").innerHTML = "<div id='showtext'>" + txtinput.value + "</div>";
                 var txtset = document.getElementById("showtext");
-                if(mode=="sizerange"){sizeinput.value = sizerange.value}
-                else{sizerange.value = sizeinput.value}
-                txtset.style = "white-space:nowrap;float:left;font-size:" + sizeinput.value + "px;color:";
+                if(mode=="sizerange") sizeinput.value = sizerange.value;
+                else sizerange.value = sizeinput.value;
+                if(txtset.style.color=="") var txtcolor = "#000";
+                else var txtcolor = txtset.style.color;
+                txtset.style = "white-space:nowrap;float:left;font-size:" + sizeinput.value + "px;color:" + txtcolor;
                 lastsize = 0;
+            }
+
+            //打开背景图片/颜色设置界面
+            function coloropt_init(bgimg_enable,opacity){
+                document.getElementById("rgbeditor").style.display = "block";
+                if(bgimg_enable=="bgimg"){
+                    document.getElementById("bgopt_sw").style.display = "inline"
+                    if(document.body.style.background.substring(0,3)=="url") coloropt_mode();
+                    else coloropt_mode("rgbedt_sw",opacity);
+                }
+                else{
+                    document.getElementById("bgopt_sw").style.display = "none"
+                    coloropt_mode("rgbedt_sw",opacity);
+                }
+            }
+
+            //切换背景图片/颜色模式
+            function coloropt_mode(name,opacity){
+                var rgb = document.getElementById("rgbedt");
+                var img = document.getElementById("bgimg");
+                var rgbsw = document.getElementById("rgbedt_sw");
+                var imgsw = document.getElementById("bgimg_sw");
+                var highlight = "font-weight:bold;border-bottom:3px solid royalblue";
+                var nolight = "border-bottom:3px solid rgba(0,0,0,0)"
+                if(name=="rgbedt_sw"){
+                    rgb.style.display = "table";
+                    img.style.display = "none";
+                    rgbsw.style = highlight;
+                    imgsw.style = nolight;
+                    rgbeditor_initbyid(rgb_id,rgb_attribute,opacity);
+                }else{
+                    rgb.style.display = "none";
+                    img.style.display = "block";
+                    imgsw.style = highlight;
+                    rgbsw.style = nolight;
+                    bgimg_init();
+                }
+            }
+
+            //导入背景图片
+            function bgimg_init(){
+                if(window.FileReader){
+                    anyimg = document.getElementById("bgimg_input");
+                    anyimg.addEventListener('change',bgimg_get,false);
+                }
+                else document.getElementById("bgimg").innerHTML = "您的浏览器不支持自定义图片。";
+                if(typeof(BgImg)!="undefined") bgimg_apply();
+            }
+
+            //加载背景图片
+            function bgimg_get(){
+                var file = anyimg.files[0];
+                if(file){
+                    if(!/image\/\w+/.test(file.type)) alert("请确保文件为图像类型,否则将无法显示");
+                    var reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = function(e){;
+                        BgImg = this.result;
+                        bgimg_apply();
+                    }
+                }
+            }
+
+            //应用背景图片
+            function bgimg_apply(){
+                document.body.style = "background:url(" + BgImg + ");background-size:cover;background-position:center";
             }
 
             //初始化
