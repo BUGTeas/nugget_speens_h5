@@ -28,6 +28,19 @@
                 min-height:auto;
                 max-height:calc(100% - 40px);
                 font-size:13px;
+                animation-name:optionEject;
+                animation-duration:150ms;
+                animation-timing-function:ease-out;
+            }
+            @keyframes optionEject{
+                0%{
+                    opacity:0;
+                    top:-40px;
+                }
+                100%{
+                    opacity:1;
+                    top:0px;
+                }
             }
             .range{
                 min-width:calc(100% - 150px);
@@ -169,11 +182,7 @@
 
 
         <!--右上角选项按钮-->
-        <div id="tips" style="position:absolute;top:0px;right:0px;width:100px;height:100px;display:none;text-align:right;background:rgba(0,0,0,0.2);color:#555;font-size:20px;padding:10px">点击此区域<br>进入选项<div style="font-size:30px;padding-top:5px">👆</div></div>
-        <button id="optbtn" style="border:none;background:none;position:absolute;top:0px;right:0px;width:100px;height:100px;outline:none;" onclick="
-            document.getElementById('option').style.display = 'block';
-            document.getElementById('tips').remove();
-        "></button>
+        <div id="tips" style="position:absolute;top:0px;left:0px;width:100%;height:60px;display:none;text-align:center;background:linear-gradient(180deg,#aaa,rgba(0,0,0,0));color:#555;font-size:16px;padding-top:5px">▼ 向下滑动或按“O”键进入选项 <span style="text-decoration:underline;user-select:none;" onclick="sID('tips').remove();">关闭提示</span></div>
 
         <!--用户选项-->
         <div id="option">
@@ -195,7 +204,7 @@
             <div id="imgopt">
                 <div id="imgopt_user">
                     <p style='margin-bottom:5px;text-align:center'>图片大小不建议超过2M，否则浏览器会卡顿甚至闪退</p>
-                    <div style="text-align:center"><button onclick="document.getElementById('imgFileInput').click()">＋ 选择本地文件</button></div>
+                    <div style="text-align:center"><button onclick="sID('imgFileInput').click()">＋ 选择本地文件</button></div>
                     <input id='imgFileInput' style="display:none" type='file'/>
                 </div>
                 宽度：<input id='imgWidthRange' class="range" type='range' min='0' max='500' value='150' oninput="applyimgvid('img','range')"/><div style="display:inline-block"><input id='imgWidthInput' value='150' class="input" oninput="applyimgvid('img')"/>像素</div>
@@ -205,7 +214,7 @@
             <div id="vidopt">
                 <div id="vidopt_user">
                     <p style='margin-bottom:5px;text-align:center'>视频将在选项关闭 3 秒后开始循环播放<br>若没有响应，点一下旋转物体即可</p>
-                    <div style="text-align:center"><button onclick="document.getElementById('vidFileInput').click()">＋ 选择本地文件</button></div>
+                    <div style="text-align:center"><button onclick="sID('vidFileInput').click()">＋ 选择本地文件</button></div>
                     <input id='vidFileInput' style="display:none" type='file'/>
                 </div>
                 宽度：<input id='vidWidthRange' class="range" type='range' min='0' max='500' value='150' oninput="applyimgvid('vid','range')"/><div style="display:inline-block"><input id='vidWidthInput' value='300' class="input" oninput="applyimgvid('vid')"/>像素</div>
@@ -222,11 +231,11 @@
             速度：<input id='speedrange' class="range" type='range' min='0' max='9999' oninput="anispeed('range')"/><div style="display:inline-block"><input id='speedinput' class="input" value='1.3' oninput='anispeed()'/>秒/转</div><hr>
 
             <p style='margin-bottom:5px'>将透视调整至75~125可以提升图像或文字的立体感。</p>
-            <div onclick="setTimeout('reverse_shadow_sw()',10)"><input type="checkbox" id="reverse_sw"/><label for="reverse_sw"> 反向</label>&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="shadow_sw"/><label for="shadow_sw"> 阴影</label><button style="width:auto;padding:5px;font-size:12px" onclick="rgb_id='body';rgb_attribute='style.background';coloropt_init('bgimg')">更改背景</button><button style="width:auto;padding:5px;font-size:12px" onclick="document.getElementById('timeropt').style.display = 'block'">计时器</button></div>
+            <div onclick="setTimeout('reverse_shadow_sw()',10)"><input type="checkbox" id="reverse_sw"/><label for="reverse_sw"> 反向</label>&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="shadow_sw"/><label for="shadow_sw"> 阴影</label><button style="width:auto;padding:5px;font-size:12px" onclick="rgb_id='body';rgb_attribute='style.background';coloropt_init('bgimg')">更改背景</button><button style="width:auto;padding:5px;font-size:12px" onclick="sID('timeropt').style.display = 'block'">计时器</button></div>
             <div style="text-align:center;margin-top:10px;"><button onclick="
                 loadtime();
-                document.getElementById('option').style.display = 'none';
-                document.getElementById('tips').style.display = 'block';
+                sID('option').style.display = 'none';
+                sID('tips').style.display = 'block';
             ">关闭</button></div>
         </div>
 
@@ -236,7 +245,7 @@
             <div class="window" id="timeropt_window">
                 <div style="margin-bottom:10px;height:30px">
                     <div style="font-size:15px;display:inline-block">计时器</div>
-                    <button style="float:right;border:none;background:none;padding:0px;margin:0px;font-size:20px;font-weight:bolder;font-family:monospace;color:#555" onclick="document.getElementById('timeropt').style.display = 'none'">×</button>
+                    <button style="float:right;border:none;background:none;padding:0px;margin:0px;font-size:20px;font-weight:bolder;font-family:monospace;color:#555" onclick="sID('timeropt').style.display = 'none'">×</button>
                 </div>
                 <div onclick="timer_optapply()"><input type="checkbox" id="timer_enabled"/><label for="timer_enabled"> 启用</label></div>
                 <table style="width:100%;border-collapse:collapse;">
@@ -267,11 +276,11 @@
                     <div style="display:inline-block;width:20px;"></div>
                     <div class="optsw" id="rgbedt_sw" onclick="coloropt_mode(this.id)">颜色</div>
                 </span>
-                <button style="float:right;border:none;background:none;padding:0px;margin:0px;font-size:20px;font-weight:bolder;font-family:monospace;color:#555" onclick="document.getElementById('rgbeditor').style.display = 'none'">×</button>
+                <button style="float:right;border:none;background:none;padding:0px;margin:0px;font-size:20px;font-weight:bolder;font-family:monospace;color:#555" onclick="sID('rgbeditor').style.display = 'none'">×</button>
             </div>
             <div id="bgimg">
                 <p style='margin-bottom:5px;text-align:center'>图片大小不建议超过2M，否则浏览器会卡顿甚至闪退</p>
-                <div style="text-align:center"><button id="bgimg_input_btn" onclick="document.getElementById('bgimg_input').click()">＋ 选择本地文件</button></div>
+                <div style="text-align:center"><button id="bgimg_input_btn" onclick="sID('bgimg_input').click()">＋ 选择本地文件</button></div>
                 <input id='bgimg_input' style="display:none" type='file'/>
             </div>
             <table id="rgbedt">
@@ -309,13 +318,65 @@
 
         <!--颜色设置脚本-->
         <script type="text/javascript"src="./rgbeditor.js"></script>
+        
+        <!--主脚本-->
         <script type="text/JavaScript">
             
+            //简写document.getElementById
+            function sID(id){
+                return document.getElementById(id);
+            }
+
+            //下滑弹出选项
+            //排除不需要下滑手势的元素sID("rotationbox").onmousedown = sID("rotationbox").ontouchstart = 
+            sID("option").onmousedown = sID("timeropt").onmousedown = sID("rgbeditor").onmousedown = sID("option").ontouchstart = sID("timeropt").ontouchstart = sID("rgbeditor").ontouchstart = function(){
+                clickReaction = "none";
+            }
+            //鼠标
+            document.body.onmousedown = function(event){
+                if(typeof clickReaction=="undefined"){
+                    moveY = event.clientY;
+                    document.onmousemove = function(event){
+                        if(moveY+60<=event.clientY) showOption();
+                    }
+                    document.onmouseup = function(){
+                        document.onmousemove = false;
+                    }
+                    return false;
+                }
+                else delete clickReaction;
+            }
+            //触摸
+            document.body.ontouchstart = function(event){
+                if(typeof clickReaction=="undefined"){
+                    moveY = event.targetTouches[0].pageY;
+                    document.ontouchmove = function(event){
+                        if(moveY+60<=event.targetTouches[0].pageY) showOption();
+                    }
+                    document.ontouchend = function(){
+                        document.ontouchmove = false;
+                    }
+                    return false;
+                }
+                else delete clickReaction;
+            }
+
+            //按“O”键弹出选项
+            document.onkeydown = function(event){
+                if(event.keyCode==79) showOption();
+            }
+
+            //显示选项界面
+            function showOption(){
+                sID("option").style.display = "block";
+                if(sID("tips")) sID("tips").remove();
+            }
+
             //旋转框架尺寸
             lastsize = 0;
             function resizebox(){
-                var rotationbox = document.getElementById("rotationbox");
-                var shadowbox = document.getElementById("shadowbox");
+                var rotationbox = sID("rotationbox");
+                var shadowbox = sID("shadowbox");
                 var winbody = document.body;
                 if(winbody.clientWidth - winbody.clientHeight!=lastsize) applyresize();
                 setTimeout(function(){resizebox()},25)
@@ -323,13 +384,13 @@
 
             function applyresize(){
                 var winbody = document.body;
-                if(winbody.clientWidth>=360) document.getElementById("option").style.width = "320px";
-                else document.getElementById("option").style.width = "calc(100% - 40px)";
+                if(winbody.clientWidth>=360) sID("option").style.width = "320px";
+                else sID("option").style.width = "calc(100% - 40px)";
                 var showname = "none"
-                if(document.getElementById("showimg")) var showname = "showimg";
-                if(document.getElementById("showvid")) var showname = "showvid";
-                if(document.getElementById("showtext")) var showname = "showtext";
-                if(showname!="none") showname = document.getElementById(showname);
+                if(sID("showimg")) var showname = "showimg";
+                if(sID("showvid")) var showname = "showvid";
+                if(sID("showtext")) var showname = "showtext";
+                if(showname!="none") showname = sID(showname);
                 if(showname){
                     boxWidth = showname.clientWidth;
                     boxHeight = showname.clientHeight;
@@ -352,13 +413,13 @@
             
             //旋转框架角度/透视
             function anglechange(mode,resize){
-                var xinput = document.getElementById("Xangleinput");
-                var xrange = document.getElementById("Xanglerange");
-                var zinput = document.getElementById("Zangleinput");
-                var zrange = document.getElementById("Zanglerange");
-                var pinput = document.getElementById("perspectinput");
-                var prange = document.getElementById("perspectrange");
-                var aniset = document.getElementById("animationset");
+                var xinput = sID("Xangleinput");
+                var xrange = sID("Xanglerange");
+                var zinput = sID("Zangleinput");
+                var zrange = sID("Zanglerange");
+                var pinput = sID("perspectinput");
+                var prange = sID("perspectrange");
+                var aniset = sID("animationset");
                 if(mode=="xrange"){
                     xinput.value = xrange.value - 180;
                 }else if(mode=="zrange"){
@@ -379,23 +440,23 @@
 
             //应用动画速度
             function anispeed(mode){
-                var input = document.getElementById("speedinput");
-                var range = document.getElementById("speedrange")
+                var input = sID("speedinput");
+                var range = sID("speedrange")
                 if(mode=="range"){input.value = 10 - range.value / 1000;}
                 else{range.value = (10 - input.value) * 1000;}
-                document.getElementById("rotationbox").style.animation = "boxanimation " + input.value + "s infinite linear";
-                document.getElementById("shadowbox").style.animation = "shadowanimation " + input.value * 1.5 + "s infinite linear";;
-                document.getElementById("headbox").style.animation = "headanimation " + input.value * 1.5 + "s infinite linear";;
+                sID("rotationbox").style.animation = "boxanimation " + input.value + "s infinite linear";
+                sID("shadowbox").style.animation = "shadowanimation " + input.value * 1.5 + "s infinite linear";;
+                sID("headbox").style.animation = "headanimation " + input.value * 1.5 + "s infinite linear";;
             }
 
             //阴影和正反转
             function reverse_shadow_sw(mode){
-                if(document.getElementById("shadow_sw").checked){
-                    document.getElementById("shadowbox").style.background = "#555";
+                if(sID("shadow_sw").checked){
+                    sID("shadowbox").style.background = "#555";
                 }else{
-                    document.getElementById("shadowbox").style.background = "rgba(0,0,0,0)";
+                    sID("shadowbox").style.background = "rgba(0,0,0,0)";
                 }
-                if(document.getElementById("reverse_sw").checked){
+                if(sID("reverse_sw").checked){
                     rotate_start_angle = 0;
                     rotate_end_angle = 360;
                 }else{
@@ -407,12 +468,12 @@
 
             //切换图片/视频/文本模式
             function showmode(name){
-                var txt = document.getElementById("txtopt");
-                var img = document.getElementById("imgopt");
-                var vid = document.getElementById("vidopt");
-                var txtsw = document.getElementById("txtopt_sw");
-                var imgsw = document.getElementById("imgopt_sw");
-                var vidsw = document.getElementById("vidopt_sw");
+                var txt = sID("txtopt");
+                var img = sID("imgopt");
+                var vid = sID("vidopt");
+                var txtsw = sID("txtopt_sw");
+                var imgsw = sID("imgopt_sw");
+                var vidsw = sID("vidopt_sw");
                 var highlight = "font-weight:bold;border-bottom:3px solid royalblue";
                 var nolight = "border-bottom:3px solid rgba(0,0,0,0)"
                 if(name=="txtopt_sw"){
@@ -440,12 +501,12 @@
                     vidsw.style = nolight;
                     applyimgvid("img");
                 }
-                /*document.getElementById("txtopt").style.display = "none";
-                document.getElementById("imgopt").style.display = "none";
-                document.getElementById("txtopt_sw").style = "";
-                document.getElementById("imgopt_sw").style = "";
-                document.getElementById(name.substring(0,6)).style.display = "block";
-                document.getElementById(name).style = "font-weight:bold;padding-bottom:5px;border-bottom:3px solid royalblue";*/
+                /*sID("txtopt").style.display = "none";
+                sID("imgopt").style.display = "none";
+                sID("txtopt_sw").style = "";
+                sID("imgopt_sw").style = "";
+                sID(name.substring(0,6)).style.display = "block";
+                sID(name).style = "font-weight:bold;padding-bottom:5px;border-bottom:3px solid royalblue";*/
             }
             
 
@@ -468,32 +529,32 @@
 
             //应用图片
             function applyimgvid(mode,range){
-                var rge = document.getElementById(mode + "WidthRange");
-                var ipt = document.getElementById(mode + "WidthInput");
+                var rge = sID(mode + "WidthRange");
+                var ipt = sID(mode + "WidthInput");
                 if(range=="range") ipt.value = rge.value;
                 if(mode=="img") var element = "<img src='" + imgSrc + "' id='showimg' style='width:" + ipt.value + "px'/>";
                 if(mode=="vid") var element = "<video style='width:" + ipt.value + "px' id='showvid' loop onclick='this.play()'><source src='" + vidSrc + "'></video>"
                 imgOrVid = mode;
-                document.getElementById("rotationbox").innerHTML = element;
+                sID("rotationbox").innerHTML = element;
                 //用户导入图片
                 if(window.FileReader){
-                    anyimg = document.getElementById(mode + "FileInput");
+                    anyimg = sID(mode + "FileInput");
                     anyimg.addEventListener('change',imageget,false);
                 }else{
-                    document.getElementById(mode + "opt_user").innerHTML = "您的浏览器不支持自定义文件。";
+                    sID(mode + "opt_user").innerHTML = "您的浏览器不支持自定义文件。";
                 }
                 applyresize();
             }
             
             //应用文字
             function applytext(mode){
-                if(document.getElementById("showimg")) document.getElementById("showimg").remove();
-                var sizeinput = document.getElementById("textsizeinput");
-                var sizerange = document.getElementById("textsizerange");
-                var txtinput = document.getElementById("inputtext");
-                if(document.getElementById("showtext")) document.getElementById("showtext").innerHTML = txtinput.value;
-                else document.getElementById("rotationbox").innerHTML = "<div id='showtext'>" + txtinput.value + "</div>";
-                var txtset = document.getElementById("showtext");
+                if(sID("showimg")) sID("showimg").remove();
+                var sizeinput = sID("textsizeinput");
+                var sizerange = sID("textsizerange");
+                var txtinput = sID("inputtext");
+                if(sID("showtext")) sID("showtext").innerHTML = txtinput.value;
+                else sID("rotationbox").innerHTML = "<div id='showtext'>" + txtinput.value + "</div>";
+                var txtset = sID("showtext");
                 if(mode=="sizerange") sizeinput.value = sizerange.value;
                 else sizerange.value = sizeinput.value;
                 if(txtset.style.color=="") var txtcolor = "#000";
@@ -507,24 +568,24 @@
 
             //打开背景图片/颜色设置界面
             function coloropt_init(bgimg_enable,opacity){
-                document.getElementById("rgbeditor").style.display = "block";
+                sID("rgbeditor").style.display = "block";
                 if(bgimg_enable=="bgimg"){
-                    document.getElementById("bgopt_sw").style.display = "inline"
+                    sID("bgopt_sw").style.display = "inline"
                     if(document.body.style.background.substring(0,3)=="url") coloropt_mode();
                     else coloropt_mode("rgbedt_sw",opacity);
                 }
                 else{
-                    document.getElementById("bgopt_sw").style.display = "none"
+                    sID("bgopt_sw").style.display = "none"
                     coloropt_mode("rgbedt_sw",opacity);
                 }
             }
 
             //切换背景图片/颜色模式
             function coloropt_mode(name,opacity){
-                var rgb = document.getElementById("rgbedt");
-                var img = document.getElementById("bgimg");
-                var rgbsw = document.getElementById("rgbedt_sw");
-                var imgsw = document.getElementById("bgimg_sw");
+                var rgb = sID("rgbedt");
+                var img = sID("bgimg");
+                var rgbsw = sID("rgbedt_sw");
+                var imgsw = sID("bgimg_sw");
                 var highlight = "font-weight:bold;border-bottom:3px solid royalblue";
                 var nolight = "border-bottom:3px solid rgba(0,0,0,0)"
                 if(name=="rgbedt_sw"){
@@ -545,10 +606,10 @@
             //导入背景图片
             function bgimg_init(){
                 if(window.FileReader){
-                    anyimg = document.getElementById("bgimg_input");
+                    anyimg = sID("bgimg_input");
                     anyimg.addEventListener('change',bgimg_get,false);
                 }
-                else document.getElementById("bgimg").innerHTML = "您的浏览器不支持自定义图片。";
+                else sID("bgimg").innerHTML = "您的浏览器不支持自定义图片。";
                 if(typeof(BgImg)!="undefined") bgimg_apply();
             }
 
@@ -574,13 +635,13 @@
             //应用计时器样式
             function timer_optapply(mode){
                 var weight = document.getElementsByName("timerweight");
-                var sizeinput = document.getElementById("timersizeinput");
-                var sizerange = document.getElementById("timersizerange");
-                var timer = document.getElementById("timer");
+                var sizeinput = sID("timersizeinput");
+                var sizerange = sID("timersizerange");
+                var timer = sID("timer");
                 for(var i=0;i<weight.length;i++){
                     if(weight[i].checked) timer.style.fontWeight = weight[i].value;
                 }
-                if(document.getElementById("timer_enabled").checked) timer.style.display = "block";
+                if(sID("timer_enabled").checked) timer.style.display = "block";
                 else{timer.style.display = "none";timework = "disabled"}
                 if(mode=="sizerange") sizeinput.value = sizerange.value;
                 timer.style.fontSize = sizeinput.value + "px";
@@ -588,13 +649,14 @@
             }
 
             //计时器拖拽调整位置
-            var moveit = document.getElementById("timer");
+            var moveit = sID("timer");
             moveit.style.top = "0px";
             moveit.style.left = "0px";
             //鼠标
             moveit.onmousedown = function(event){
-                    moveX = event.clientX - moveit.offsetLeft;
-                    moveY = event.clientY - moveit.offsetTop;
+                clickReaction = "none";
+                moveX = event.clientX - moveit.offsetLeft;
+                moveY = event.clientY - moveit.offsetTop;
                 document.onmousemove = function(event){
                     moveit.style.top = event.clientY - moveY + "px";
                     moveit.style.left = event.clientX - moveX + "px";
@@ -606,8 +668,9 @@
             }
             //触摸
             moveit.ontouchstart = function(event){
-                    moveX = event.targetTouches[0].pageX - moveit.offsetLeft;
-                    moveY = event.targetTouches[0].pageY - moveit.offsetTop;
+                clickReaction = "none";
+                moveX = event.targetTouches[0].pageX - moveit.offsetLeft;
+                moveY = event.targetTouches[0].pageY - moveit.offsetTop;
                 document.ontouchmove = function(event){
                     moveit.style.left = event.targetTouches[0].pageX - moveX + "px";
                     moveit.style.top = event.targetTouches[0].pageY - moveY + "px";
@@ -649,16 +712,16 @@
                 if(String(minutenum).length==1) minutenum = "0" + minutenum
                 if(String(secondnum).length==1) secondnum = "0" + secondnum;
                 timefull = minutenum + ":" + secondnum + ":" + msnumx + msnum;
-                document.getElementById("timer").innerHTML = timefull;
+                sID("timer").innerHTML = timefull;
                 if(timework=="enabled") setTimeout("timedisplay()",1);
-                else document.getElementById("timer").innerHTML = "3 秒后开始";
+                else sID("timer").innerHTML = "3 秒后开始";
             }
             
             //初始化计时器
             function loadtime(mode){
                 if(mode!="noreset") readyCountdown = 3;
                 if(readyCountdown==0){
-                    if(document.getElementById("timer").style.display!="none"){
+                    if(sID("timer").style.display!="none"){
                         timework = "enabled";
                         minutenum = 0
                         secondnum = 0;
@@ -669,16 +732,16 @@
                         setTimeout("timems()",10);
                         timedisplay();
                     }
-                    if(document.getElementById('showvid')){
-                        var vid = document.getElementById('showvid');
+                    if(sID('showvid')){
+                        var vid = sID('showvid');
                         vid.currentTime = 0;
                         vid.play();
                     }
                 }
                 else{
                     timework = "disabled";
-                    if(document.getElementById("timer").style.display!="none") 
-                    document.getElementById("timer").innerHTML = readyCountdown + " 秒后开始";
+                    if(sID("timer").style.display!="none") 
+                    sID("timer").innerHTML = readyCountdown + " 秒后开始";
                     readyCountdown = readyCountdown - 1;
                     setTimeout("loadtime('noreset')",1000);
                 }
@@ -687,13 +750,13 @@
             //初始化
             imgSrc = "./nugget.png"
             vidSrc = "./test.mp4"
-            document.getElementById("shadow_sw").checked = "true";
+            sID("shadow_sw").checked = "true";
             reverse_shadow_sw("load");
             timer_optapply('sizerange')
             resizebox();
             showmode();
             anispeed();
-            document.getElementById("loadingMask").remove();
+            sID("loadingMask").remove();
         </script>
     </body>
 </html>
