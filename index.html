@@ -19,7 +19,7 @@
             }
             #option{
                 position:absolute;
-                z-index:4;
+                z-index:3;
                 background:rgba(123,123,123,0.5);
                 top:0;
                 right:0;
@@ -89,7 +89,7 @@
                 left:0px;
                 background:rgba(128,128,128,0.5);
                 position:absolute;
-                z-index:114514;
+                z-index:4;
                 display:none;
             }
             .window{
@@ -155,6 +155,9 @@
         <style id="animationset"></style>
     </head>
     <body id="body">
+        
+        <!--页面加载过程遮罩-->
+        <div id="loadingMask" style="position:absolute;z-index:5;top:0px;left:0px;width:100%;height:100%;padding:30px;font-size:40px;font-weight:lighter;color:#888;background-color:#fff;">请稍候...</div>
 
         <!--顶部上下晃动-->
         <div id="headbox"></div>
@@ -201,10 +204,9 @@
             <!--视频设置界面-->
             <div id="vidopt">
                 <div id="vidopt_user">
-                    <p style='margin-bottom:5px;text-align:center'>视频将在选项关闭 3 秒后开始循环播放</p>
+                    <p style='margin-bottom:5px;text-align:center'>视频将在选项关闭 3 秒后开始循环播放<br>若没有响应，点一下旋转物体即可</p>
                     <div style="text-align:center"><button onclick="document.getElementById('vidFileInput').click()">＋ 选择本地文件</button></div>
                     <input id='vidFileInput' style="display:none" type='file'/>
-                    <p style='margin-bottom:5px;text-align:center'>部分浏览器使用非标准的内置播放器，导致视频无法正常播放，可尝试更换浏览器。</p>
                 </div>
                 宽度：<input id='vidWidthRange' class="range" type='range' min='0' max='500' value='150' oninput="applyimgvid('vid','range')"/><div style="display:inline-block"><input id='vidWidthInput' value='300' class="input" oninput="applyimgvid('vid')"/>像素</div>
             </div>
@@ -586,9 +588,10 @@
             }
 
             //计时器拖拽调整位置
-            var moveit = document.getElementById("timer")
+            var moveit = document.getElementById("timer");
             moveit.style.top = "0px";
             moveit.style.left = "0px";
+            //鼠标
             moveit.onmousedown = function(event){
                     moveX = event.clientX - moveit.offsetLeft;
                     moveY = event.clientY - moveit.offsetTop;
@@ -601,6 +604,7 @@
                 }
                 return false;
             }
+            //触摸
             moveit.ontouchstart = function(event){
                     moveX = event.targetTouches[0].pageX - moveit.offsetLeft;
                     moveY = event.targetTouches[0].pageY - moveit.offsetTop;
@@ -689,6 +693,7 @@
             resizebox();
             showmode();
             anispeed();
+            document.getElementById("loadingMask").remove();
         </script>
     </body>
 </html>
