@@ -115,7 +115,7 @@
                 border:1px solid #ddd;
                 border-radius:5px;
             }
-            .window div,table{
+            .window div,.window table{
                 margin-bottom:10px;
             }
             .window button{
@@ -271,7 +271,7 @@
         <div class="window_bg" id="rgbeditor">
             <div style="height:calc(50% - 170px);"></div>
             <div class="window" id="rgbeditor_window">
-            <div style="margin-bottom:10px"><span id="bgopt_sw" style="display:none">
+            <div style="margin-bottom:10px;min-height:20px"><span id="bgopt_sw" style="display:none">
                     <div class="optsw" id="bgimg_sw" onclick="coloropt_mode(this.id)">图片</div>
                     <div style="display:inline-block;width:20px;"></div>
                     <div class="optsw" id="rgbedt_sw" onclick="coloropt_mode(this.id)">颜色</div>
@@ -328,7 +328,7 @@
             }
 
             //下滑弹出选项
-            //排除不需要下滑手势的元素sID("rotationbox").onmousedown = sID("rotationbox").ontouchstart = 
+            //排除不需要下滑手势的元素
             sID("option").onmousedown = sID("timeropt").onmousedown = sID("rgbeditor").onmousedown = sID("option").ontouchstart = sID("timeropt").ontouchstart = sID("rgbeditor").ontouchstart = function(){
                 clickReaction = "none";
             }
@@ -376,15 +376,15 @@
 
             //旋转框架尺寸
             lastsize = 0;
-            function resizebox(){
-                var rotationbox = sID("rotationbox");
-                var shadowbox = sID("shadowbox");
+            function autoresize(){
                 var winbody = document.body;
                 if(winbody.clientWidth - winbody.clientHeight!=lastsize) applyresize();
-                setTimeout(function(){resizebox()},25)
+                setTimeout("autoresize()",25)
             }
 
             function applyresize(){
+                var rotationbox = sID("rotationbox");
+                var shadowbox = sID("shadowbox");
                 var winbody = document.body;
                 if(winbody.clientWidth>=360) sID("option").style.width = "320px";
                 else sID("option").style.width = "calc(100% - 40px)";
@@ -400,14 +400,12 @@
                     boxWidth = "300";
                     boxHeight = "300";
                 }
-                rotationbox.style.width = boxWidth + "px";
+                rotationbox.style.width = shadowbox.style.width = boxWidth + "px";
                 rotationbox.style.height = boxHeight + "px";
-                shadowbox.style.width = boxWidth + "px";
                 shadowbox.style.height = boxHeight / 5 + "px";
                 document.title = "万物皆可旋转（" + rotationbox.style.width + " x " + rotationbox.style.height + "）";
-                headheight = (winbody.clientHeight - rotationbox.clientHeight) / 2
-                rotationbox.style.marginLeft = (winbody.clientWidth - rotationbox.clientWidth) / 2 + "px";
-                shadowbox.style.marginLeft = (winbody.clientWidth - rotationbox.clientWidth) / 2 + "px";
+                headHeight = (winbody.clientHeight - rotationbox.clientHeight) / 2
+                rotationbox.style.marginLeft = shadowbox.style.marginLeft = (winbody.clientWidth - rotationbox.clientWidth) / 2 + "px";
                 lastsize = winbody.clientWidth - winbody.clientHeight
                 setTimeout("applyresize()",500);
                 anglechange();
@@ -437,7 +435,7 @@
                 var BoxIV = boxHeight / 5;
                 var BoxII = boxWidth / 10;
                 var BoxI = boxWidth / 7;
-                aniset.innerHTML = "@keyframes headanimation{0%{margin-top:" + Number(headheight + BoxV) + "px}50%{margin-top:" + Number(headheight - BoxV) + "px}100%{margin-top:" + Number(headheight + BoxV) + "px}}  @keyframes shadowanimation{0%{filter:blur(" + BoxII + "px);margin-top:" + Number(BoxIV - BoxV) + "px}50%{filter:blur(" + BoxI + "px);margin-top:" + Number(BoxIV + BoxV) + "px}100%{filter:blur(" + BoxII + "px);margin-top:" + Number(BoxIV - BoxV) + "px}}  @keyframes boxanimation{0%{transform:perspective(" + pinput.value + "px) rotateX(" + xinput.value + "deg) rotateY(" + rotate_start_angle + "deg) rotateZ(" + zinput.value + "deg)}100%{transform:perspective(" + pinput.value + "px) rotateX(" + xinput.value + "deg) rotateY(" + rotate_end_angle + "deg) rotateZ(" + zinput.value + "deg)}}"
+                aniset.innerHTML = "@keyframes headanimation{0%{margin-top:" + Number(headHeight + BoxV) + "px}50%{margin-top:" + Number(headHeight - BoxV) + "px}100%{margin-top:" + Number(headHeight + BoxV) + "px}}  @keyframes shadowanimation{0%{filter:blur(" + BoxII + "px);margin-top:" + Number(BoxIV - BoxV) + "px}50%{filter:blur(" + BoxI + "px);margin-top:" + Number(BoxIV + BoxV) + "px}100%{filter:blur(" + BoxII + "px);margin-top:" + Number(BoxIV - BoxV) + "px}}  @keyframes boxanimation{0%{transform:perspective(" + pinput.value + "px) rotateX(" + xinput.value + "deg) rotateY(" + rotateAngle[0] + "deg) rotateZ(" + zinput.value + "deg)}100%{transform:perspective(" + pinput.value + "px) rotateX(" + xinput.value + "deg) rotateY(" + rotateAngle[1] + "deg) rotateZ(" + zinput.value + "deg)}}"
             }
 
             //应用动画速度
@@ -453,79 +451,36 @@
 
             //阴影和正反转
             function reverse_shadow_sw(mode){
-                if(sID("shadow_sw").checked){
-                    sID("shadowbox").style.background = "#555";
-                }else{
-                    sID("shadowbox").style.background = "rgba(0,0,0,0)";
-                }
-                if(sID("reverse_sw").checked){
-                    rotate_start_angle = 0;
-                    rotate_end_angle = 360;
-                }else{
-                    rotate_start_angle = 360;
-                    rotate_end_angle = 0;
-                }
+                if(sID("shadow_sw").checked) sID("shadowbox").style.background = "#555";
+                else sID("shadowbox").style.background = "rgba(0,0,0,0)";
+                if(sID("reverse_sw").checked) rotateAngle = [0,360];
+                else rotateAngle = [360,0];
                 if(mode!="load") anglechange();
             }
 
             //切换图片/视频/文本模式
             function showmode(name){
-                var txt = sID("txtopt");
-                var img = sID("imgopt");
-                var vid = sID("vidopt");
-                var txtsw = sID("txtopt_sw");
-                var imgsw = sID("imgopt_sw");
-                var vidsw = sID("vidopt_sw");
-                var highlight = "font-weight:bold;border-bottom:3px solid royalblue";
-                var nolight = "border-bottom:3px solid rgba(0,0,0,0)"
-                if(name=="txtopt_sw"){
-                    txt.style.display = "block";
-                    img.style.display = "none";
-                    vid.style.display = "none";
-                    txtsw.style = highlight;
-                    imgsw.style = nolight;
-                    vidsw.style = nolight;
-                    applytext();
-                }else if(name=="vidopt_sw"){
-                    txt.style.display = "none";
-                    img.style.display = "none";
-                    vid.style.display = "block";
-                    txtsw.style = nolight;
-                    imgsw.style = nolight;
-                    vidsw.style = highlight;
-                    applyimgvid("vid");
-                }else{
-                    txt.style.display = "none";
-                    img.style.display = "block";
-                    vid.style.display = "none";
-                    imgsw.style = highlight;
-                    txtsw.style = nolight;
-                    vidsw.style = nolight;
-                    applyimgvid("img");
+                if(name=="txtopt_sw") applytext();
+                else applyimgvid(name.substring(0,3));
+                var optList = ["txt","img","vid"];
+                for(i=0;i<optList.length;i++){
+                    sID(optList[i] + "opt").style.display = "none";
+                    sID(optList[i] + "opt_sw").style = "border-bottom:3px solid rgba(0,0,0,0)";
                 }
-                /*sID("txtopt").style.display = "none";
-                sID("imgopt").style.display = "none";
-                sID("txtopt_sw").style = "";
-                sID("imgopt_sw").style = "";
                 sID(name.substring(0,6)).style.display = "block";
-                sID(name).style = "font-weight:bold;padding-bottom:5px;border-bottom:3px solid royalblue";*/
+                sID(name).style = "font-weight:bold;border-bottom:3px solid royalblue";
             }
-            
 
             //加载用户图片
             function imageget(){
                 var file = anyimg.files[0];
                 if(imgOrVid=="img"){
-                    if(!/image\/\w+/.test(file.type)){
-                        alert("请确保文件为图像类型,否则将无法显示");
-                    }
-                    var reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = function(e){;
-                        imgSrc = this.result;
-                    }
+                    if(!/image\/\w+/.test(file.type)) alert("请确保文件为图像类型,否则将无法显示");
+                    imgSrc = URL.createObjectURL(file);
+                }else if(imgOrVid=="vid"){
+                    if(!/video\/\w+/.test(file.type)) alert("请确保文件为视频类型,否则将无法显示");
+                    vidSrc = URL.createObjectURL(file);
                 }
-                else if(imgOrVid=="vid") vidSrc = URL.createObjectURL(file);
                 applyimgvid(imgOrVid);
             }
 
@@ -542,30 +497,28 @@
                 if(window.FileReader){
                     anyimg = sID(mode + "FileInput");
                     anyimg.addEventListener('change',imageget,false);
-                }else{
-                    sID(mode + "opt_user").innerHTML = "您的浏览器不支持自定义文件。";
-                }
+                }else sID(mode + "opt_user").innerHTML = "您的浏览器不支持自定义文件。";
                 applyresize();
             }
             
             //应用文字
             function applytext(mode){
                 if(sID("showimg")) sID("showimg").remove();
-                var sizeinput = sID("textsizeinput");
-                var sizerange = sID("textsizerange");
-                var txtinput = sID("inputtext");
-                if(sID("showtext")) sID("showtext").innerHTML = txtinput.value;
-                else sID("rotationbox").innerHTML = "<div id='showtext'>" + txtinput.value + "</div>";
-                var txtset = sID("showtext");
-                if(mode=="sizerange") sizeinput.value = sizerange.value;
-                else sizerange.value = sizeinput.value;
-                if(txtset.style.color=="") var txtcolor = "#000";
-                else var txtcolor = txtset.style.color;
-                if(txtset.style.backgroundColor=="") var txtbg = "rgba(17,69,20,0)";
-                else var txtbg = txtset.style.backgroundColor;
-                paddingset = sizeinput.value / 4;
-                txtset.style = "white-space:nowrap;float:left;font-size:" + sizeinput.value + "px;padding:" + paddingset + "px;border-radius:" + paddingset + "px;color:" + txtcolor + ";background-color:" + txtbg;
-                lastsize = 0;
+                var sizeInput = sID("textsizeinput");
+                var sizeRange = sID("textsizerange");
+                var txtInput = sID("inputtext");
+                if(sID("showtext")) sID("showtext").innerHTML = txtInput.value;
+                else sID("rotationbox").innerHTML = "<div id='showtext'>" + txtInput.value + "</div>";
+                var txtSet = sID("showtext");
+                if(mode=="sizerange") sizeInput.value = sizeRange.value;
+                else sizeRange.value = sizeInput.value;
+                if(txtSet.style.color=="") var txtColor = "#000";
+                else var txtColor = txtSet.style.color;
+                if(txtSet.style.backgroundColor=="") var txtBg = "rgba(17,69,20,0)";
+                else var txtBg = txtSet.style.backgroundColor;
+                paddingSet = sizeInput.value / 4;
+                txtSet.style = "white-space:nowrap;float:left;font-size:" + sizeInput.value + "px;padding:" + paddingSet + "px;border-radius:" + paddingSet + "px;color:" + txtColor + ";background-color:" + txtBg;
+                applyresize();
             }
 
             //打开背景图片/颜色设置界面
@@ -584,25 +537,22 @@
 
             //切换背景图片/颜色模式
             function coloropt_mode(name,opacity){
-                var rgb = sID("rgbedt");
-                var img = sID("bgimg");
-                var rgbsw = sID("rgbedt_sw");
-                var imgsw = sID("bgimg_sw");
                 var highlight = "font-weight:bold;border-bottom:3px solid royalblue";
                 var nolight = "border-bottom:3px solid rgba(0,0,0,0)"
-                if(name=="rgbedt_sw"){
-                    rgb.style.display = "table";
-                    img.style.display = "none";
-                    rgbsw.style = highlight;
-                    imgsw.style = nolight;
-                    rgbeditor_initbyid(rgb_id,rgb_attribute,opacity);
-                }else{
-                    rgb.style.display = "none";
-                    img.style.display = "block";
-                    imgsw.style = highlight;
-                    rgbsw.style = nolight;
-                    bgimg_init();
+                var optList = ["rgbedt","bgimg"];
+                for(i=0;i<optList.length;i++){
+                    sID(optList[i]).style.display = "none";
+                    sID(optList[i] + "_sw").style = nolight;
                 }
+                if(name=="rgbedt_sw"){
+                    rgbeditor_initbyid(rgb_id,rgb_attribute,opacity);
+                    sID("rgbedt").style.display = "table";
+                }
+                else{
+                    bgimg_init();
+                    sID("bgimg").style.display = "block";
+                }
+                sID(name).style = highlight;
             }
 
             //导入背景图片
@@ -618,15 +568,9 @@
             //加载背景图片
             function bgimg_get(){
                 var file = anyimg.files[0];
-                if(file){
-                    if(!/image\/\w+/.test(file.type)) alert("请确保文件为图像类型,否则将无法显示");
-                    var reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = function(e){;
-                        BgImg = this.result;
-                        bgimg_apply();
-                    }
-                }
+                if(!/image\/\w+/.test(file.type)) alert("请确保文件为图像类型,否则将无法显示");
+                BgImg = URL.createObjectURL(file);
+                bgimg_apply();
             }
 
             //应用背景图片
@@ -637,17 +581,18 @@
             //应用计时器样式
             function timer_optapply(mode){
                 var weight = document.getElementsByName("timerweight");
-                var sizeinput = sID("timersizeinput");
-                var sizerange = sID("timersizerange");
+                var sizeInput = sID("timersizeinput");
+                var sizeRange = sID("timersizerange");
                 var timer = sID("timer");
                 for(var i=0;i<weight.length;i++){
                     if(weight[i].checked) timer.style.fontWeight = weight[i].value;
                 }
                 if(sID("timer_enabled").checked) timer.style.display = "block";
                 else{timer.style.display = "none";timework = "disabled"}
-                if(mode=="sizerange") sizeinput.value = sizerange.value;
-                timer.style.fontSize = sizeinput.value + "px";
-                timer.style.padding = timer.style.borderRadius = sizeinput.value / 5 + "px";
+                if(mode=="sizerange") sizeInput.value = sizeRange.value;
+                else sizeRange.value = sizeInput.value;
+                timer.style.fontSize = sizeInput.value + "px";
+                timer.style.padding = timer.style.borderRadius = sizeInput.value / 5 + "px";
             }
 
             //计时器拖拽调整位置
@@ -711,12 +656,13 @@
 
             //刷新计时器显示
             function timedisplay(){
-                if(String(minutenum).length==1) minutenum = "0" + minutenum
-                if(String(secondnum).length==1) secondnum = "0" + secondnum;
-                timefull = minutenum + ":" + secondnum + ":" + msnumx + msnum;
-                sID("timer").innerHTML = timefull;
-                if(timework=="enabled") setTimeout("timedisplay()",1);
-                else sID("timer").innerHTML = "3 秒后开始";
+                if(timework=="enabled"){
+                    if(String(minutenum).length==1) minutenum = "0" + minutenum;
+                    if(String(secondnum).length==1) secondnum = "0" + secondnum;
+                    timefull = minutenum + ":" + secondnum + ":" + msnumx + msnum;
+                    sID("timer").innerHTML = timefull;
+                    setTimeout("timedisplay()",1);
+                }
             }
             
             //初始化计时器
@@ -755,8 +701,8 @@
             sID("shadow_sw").checked = "true";
             reverse_shadow_sw("load");
             timer_optapply('sizerange')
-            resizebox();
-            showmode();
+            autoresize();
+            showmode("imgopt_sw");
             anispeed();
             sID("loadingMask").remove();
         </script>
