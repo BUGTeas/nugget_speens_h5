@@ -10,7 +10,7 @@
                 overflow:hidden;
             }
             #shadowbox{
-                border-radius:100%;
+                border-radius:50%;
             }
             #timer{
                 position:absolute;
@@ -118,13 +118,24 @@
             .window div,.window table{
                 margin-bottom:10px;
             }
-            .window button{
+            .window_button{
                 border:none;
                 border-radius:3px;
                 background-color:rgb(41, 108, 255);
                 color:white;
-                padding:10px;
+                padding:7px;
                 margin-right:10px;
+                font-size:13px;
+            }
+            .window_close{
+                float:right;
+                border:none;
+                background:none;
+                padding:0px;
+                margin:0px;
+                font-size:25px;
+                font-family:'Lucida console',monospace;
+                color:#555;
             }
             #rgbeditor_window .optsw{
                 display:inline-block;
@@ -196,7 +207,7 @@
             <div id="txtopt">
                 <p style='margin-bottom:5px'>如需换行，请使用“&lt;br&gt;”</p>
                 <textarea rows="5" id="inputtext" oninput="applytext()">旋转 の 页面</textarea>
-                <div><button style="width:auto;padding:5px;font-size:12px" onclick="rgb_id='showtext';rgb_attribute='style.color';coloropt_init('x','opacity')">字体颜色</button><button style="width:auto;padding:5px;font-size:12px" onclick="rgb_id='showtext';rgb_attribute='style.backgroundColor';coloropt_init('x','opacity')">背景颜色</button></div>
+                <div><button style="width:auto;padding:7px;font-size:13px" onclick="rgb_id='showtext';rgb_attribute='style.color';coloropt_init('x','opacity')">字体颜色</button><button style="width:auto;padding:7px;font-size:13px" onclick="rgb_id='showtext';rgb_attribute='style.backgroundColor';coloropt_init('x','opacity')">背景颜色</button></div>
                 字体大小：<br><input id='textsizerange' class="range" type='range' min='0' max='360' value='72' oninput="applytext('sizerange')"/><div style="display:inline-block"><input id='textsizeinput' class="input" value="72" oninput='applytext()'/>像素</div>
             </div>
 
@@ -221,8 +232,11 @@
             </div>
             <!--效果设置-->
             <hr>
-            
+            旋转轴：<input type="radio" name="rotateRadio" id="rotateRadioX" value="X" onclick="anglechange()"/><label for="rotateRadioX">X</label>&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="rotateRadio" id="rotateRadioY" value="Y" checked onclick="anglechange()"/><label for="rotateRadioY">Y</label><hr>
+
             X轴：<input id='Xanglerange' class="range" type='range' min='0' max='360' oninput="anglechange('xrange')"/><div style="display:inline-block"><input id='Xangleinput' class="input" value='0' oninput='anglechange()'/>°</div><hr>
+
+            Y轴：<input id='Yanglerange' class="range" type='range' min='0' max='360' oninput="anglechange('yrange')"/><div style="display:inline-block"><input id='Yangleinput' class="input" value='0' oninput='anglechange()'/>°</div><hr>
 
             Z轴：<input id='Zanglerange' class="range" type='range' min='0' max='360' oninput="anglechange('zrange')"/><div style="display:inline-block"><input id='Zangleinput' class="input" value='0' oninput='anglechange()'/>°</div><hr>
 
@@ -231,7 +245,8 @@
             速度：<input id='speedrange' class="range" type='range' min='0' max='9999' oninput="anispeed('range')"/><div style="display:inline-block"><input id='speedinput' class="input" value='1.3' oninput='anispeed()'/>秒/转</div><hr>
 
             <p style='margin-bottom:5px'>将透视调整至75~125可以提升图像或文字的立体感。</p>
-            <div onclick="setTimeout('reverse_shadow_sw()',10)"><input type="checkbox" id="reverse_sw"/><label for="reverse_sw"> 反向</label>&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="shadow_sw"/><label for="shadow_sw"> 阴影</label><button style="width:auto;padding:5px;font-size:12px" onclick="rgb_id='body';rgb_attribute='style.background';coloropt_init('bgimg')">更改背景</button><button style="width:auto;padding:5px;font-size:12px" onclick="sID('timeropt').style.display = 'block'">计时器</button></div>
+            <div onclick="setTimeout('reverse_shadow_sw()',10)"><input type="checkbox" id="reverse_sw"/><label for="reverse_sw"> 反向</label>&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="shadow_sw"/><label for="shadow_sw"> 阴影</label><button style="width:auto;padding:7px;font-size:13px" onclick="rgb_id='body';rgb_attribute='style.background';coloropt_init('bgimg')">更改背景</button><button style="width:auto;padding:7px;font-size:13px" onclick="sID('timeropt').style.display = 'block'">计时器</button></div>
+            <div style="text-align:center;font-size:12px">由 BUGTeas 制作<br><a href="https://github.com/BUGTeas/nugget_speens_h5" target="_blank" style="font-size:15px">Github</a>&nbsp;&nbsp;<a href="https://www.bilibili.com/video/BV1xK411r7C3" target="_blank" style="font-size:15px">Bilibili</a></div>
             <div style="text-align:center;margin-top:10px;"><button onclick="
                 loadtime();
                 sID('option').style.display = 'none';
@@ -245,9 +260,10 @@
             <div class="window" id="timeropt_window">
                 <div style="margin-bottom:10px;height:30px">
                     <div style="font-size:15px;display:inline-block">计时器</div>
-                    <button style="float:right;border:none;background:none;padding:0px;margin:0px;font-size:20px;font-weight:bolder;font-family:monospace;color:#555" onclick="sID('timeropt').style.display = 'none'">×</button>
+                    <button class="window_close" onclick="sID('timeropt').style.display = 'none'">×</button>
                 </div>
                 <div onclick="timer_optapply()"><input type="checkbox" id="timer_enabled"/><label for="timer_enabled"> 启用</label></div>
+                <div style="font-size:14px">如需调整位置，可以直接拖动计时器。</div>
                 <table style="width:100%;border-collapse:collapse;">
                     <tr>
                         <td class="rgbeditor_optname">大小</td>
@@ -261,9 +277,8 @@
                     <input type="radio" name="timerweight" id="timer_bolder" value="bolder"><label for="timer_bolder">加粗</label>
                 </div>
                 <div>
-                    <button style="width:auto;padding:5px;font-size:12px" onclick="rgb_id='timer';rgb_attribute='style.color';coloropt_init('x','opacity')">字体颜色</button><button style="width:auto;padding:5px;font-size:12px" onclick="rgb_id='timer';rgb_attribute='style.backgroundColor';coloropt_init('x','opacity')">背景颜色</button>
+                    <button class="window_button" onclick="rgb_id='timer';rgb_attribute='style.color';coloropt_init('x','opacity')">字体颜色</button><button class="window_button" onclick="rgb_id='timer';rgb_attribute='style.backgroundColor';coloropt_init('x','opacity')">背景颜色</button>
                 </div>
-                <div>如需调整位置，可以直接拖动计时器。</div>
             </div>
         </div>
 
@@ -415,27 +430,30 @@
             function anglechange(mode,resize){
                 var xinput = sID("Xangleinput");
                 var xrange = sID("Xanglerange");
+                var yinput = sID("Yangleinput");
+                var yrange = sID("Yanglerange");
                 var zinput = sID("Zangleinput");
                 var zrange = sID("Zanglerange");
                 var pinput = sID("perspectinput");
                 var prange = sID("perspectrange");
                 var aniset = sID("animationset");
-                if(mode=="xrange"){
-                    xinput.value = xrange.value - 180;
-                }else if(mode=="zrange"){
-                    zinput.value = zrange.value - 180;
-                }else if(mode=="prange"){
-                    pinput.value = 1000 - prange.value;
-                }else{
+                if(mode=="xrange") xinput.value = xrange.value - 180;
+                else if(mode=="yrange") yinput.value = yrange.value - 180;
+                else if(mode=="zrange") zinput.value = zrange.value - 180;
+                else if(mode=="prange") pinput.value = 1000 - prange.value;
+                else{
                     xrange.value = Number(xinput.value) + 180;
+                    zrange.value = Number(yinput.value) + 180;
                     zrange.value = Number(zinput.value) + 180;
                     prange.value = 1000 - pinput.value;
                 }
+                if(sID("rotateRadioY").checked) var rMod = "Y";
+                if(sID("rotateRadioX").checked) var rMod = "X";
                 var BoxV = boxHeight / 10;
                 var BoxIV = boxHeight / 5;
-                var BoxII = boxWidth / 10;
-                var BoxI = boxWidth / 7;
-                aniset.innerHTML = "@keyframes headanimation{0%{margin-top:" + Number(headHeight + BoxV) + "px}50%{margin-top:" + Number(headHeight - BoxV) + "px}100%{margin-top:" + Number(headHeight + BoxV) + "px}}  @keyframes shadowanimation{0%{filter:blur(" + BoxII + "px);margin-top:" + Number(BoxIV - BoxV) + "px}50%{filter:blur(" + BoxI + "px);margin-top:" + Number(BoxIV + BoxV) + "px}100%{filter:blur(" + BoxII + "px);margin-top:" + Number(BoxIV - BoxV) + "px}}  @keyframes boxanimation{0%{transform:perspective(" + pinput.value + "px) rotateX(" + xinput.value + "deg) rotateY(" + rotateAngle[0] + "deg) rotateZ(" + zinput.value + "deg)}100%{transform:perspective(" + pinput.value + "px) rotateX(" + xinput.value + "deg) rotateY(" + rotateAngle[1] + "deg) rotateZ(" + zinput.value + "deg)}}"
+                var BoxII = boxHeight / 10;
+                var BoxI = boxHeight / 7;
+                aniset.innerHTML = "@keyframes headanimation{0%{margin-top:" + Number(headHeight + BoxV) + "px}50%{margin-top:" + Number(headHeight - BoxV) + "px}100%{margin-top:" + Number(headHeight + BoxV) + "px}}  @keyframes shadowanimation{0%{filter:blur(" + BoxII + "px);margin-top:" + Number(BoxIV - BoxV) + "px}50%{filter:blur(" + BoxI + "px);margin-top:" + Number(BoxIV + BoxV) + "px}100%{filter:blur(" + BoxII + "px);margin-top:" + Number(BoxIV - BoxV) + "px}}  @keyframes boxanimation{0%{transform:perspective(" + pinput.value + "px) rotate" + rMod + "(" + rotateAngle[0] + "deg) rotateX(" + xinput.value + "deg) rotateY(" + yinput.value + "deg) rotateZ(" + zinput.value + "deg)}100%{transform:perspective(" + pinput.value + "px) rotate" + rMod + "(" + rotateAngle[1] + "deg) rotateX(" + xinput.value + "deg) rotateY(" + yinput.value + "deg) rotateZ(" + zinput.value + "deg)}}"
             }
 
             //应用动画速度
@@ -489,6 +507,7 @@
                 var rge = sID(mode + "WidthRange");
                 var ipt = sID(mode + "WidthInput");
                 if(range=="range") ipt.value = rge.value;
+                else rge.value = ipt.value;
                 if(mode=="img") var element = "<img src='" + imgSrc + "' id='showimg' style='width:" + ipt.value + "px'/>";
                 if(mode=="vid") var element = "<video style='width:" + ipt.value + "px' id='showvid' loop onclick='this.play()'><source src='" + vidSrc + "'></video>"
                 imgOrVid = mode;
