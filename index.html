@@ -9,14 +9,17 @@
                 height:100%;
                 overflow:hidden;
             }
+            /*阴影圆角*/
             #shadowbox{
                 border-radius:50%;
             }
+            /*计时器悬浮、鼠标指针、禁用选择文字*/
             #timer{
                 position:absolute;
                 user-select:none;
                 cursor:move;
             }
+            /*选项界面*/
             #option{
                 position:absolute;
                 z-index:3;
@@ -32,6 +35,7 @@
                 animation-duration:150ms;
                 animation-timing-function:ease-out;
             }
+            /*向下弹出选项*/
             @keyframes optionEject{
                 0%{
                     opacity:0;
@@ -42,35 +46,56 @@
                     top:0px;
                 }
             }
+            /*滑动条*/
             .range{
                 min-width:calc(100% - 150px);
                 max-width:100px;
             }
+            /*输入框*/
             .input{
-                width:35px;
-                border:1px solid #aaa;
-                border-radius:10px;
+                width:50px;
+                border:1px solid #999;
+                border-radius:7px;
                 margin:5px;
                 padding:5px;
             }
+            /*选项按钮*/
             #option button{
-                padding:10px;
                 background:rgb(46, 102, 255);
                 color:#fff;
-                border:0;
+                border:none;
                 border-radius:5px;
+                margin:10px 10px 10px 0px;
+                transition-property:all;
+                transition-duration:200ms;
+                vertical-align:top;
+                padding:7px;
+                font-size:13px;
+            }
+            /*大选项按钮*/
+            #option .bigButton{
+                padding:10px;
                 font-size:15px;
                 margin:10px;
                 width:150px;
-                transition-property:all;
-                transition-duration:200ms;
             }
+            /*选项按钮点击后*/
             #option button:hover{
                 background:rgb(100, 142, 255);
             }
             #option button:active{
-                transform:scale(0.9);
+                transform:scale(0.91);
             }
+            #option .bigButton:active{
+                transform:scale(0.95);
+            }
+            #option .name{
+                display:inline-block;
+                text-align:right;
+                max-width:auto;
+                min-width:40px;
+            }
+            /*选项卡切换*/
             #option .optsw{
                 display:inline-block;
                 font-size:20px;
@@ -81,15 +106,17 @@
             #option .optsw:hover{
                 font-weight:bolder;
             }
+            /*文本选项大文本框*/
             #inputtext{
-                border:1px solid #aaa;
-                border-radius:10px;
+                border:1px solid #999;
+                border-radius:7px;
                 padding:5px;
                 min-width:calc(100% - 10px);
                 max-width:calc(100% - 10px);
                 min-height:50px;
                 max-height:200px;
             }
+            /*分隔线*/
             hr{
                 border:0.5px solid #aaa;
             }
@@ -207,47 +234,54 @@
             <div id="txtopt">
                 <p style='margin-bottom:5px'>如需换行，请使用“&lt;br&gt;”</p>
                 <textarea rows="5" id="inputtext" oninput="applytext()">旋转 の 页面</textarea>
-                <div><button style="width:auto;padding:7px;font-size:13px" onclick="rgb_id='showtext';rgb_attribute='style.color';coloropt_init('x','opacity')">字体颜色</button><button style="width:auto;padding:7px;font-size:13px" onclick="rgb_id='showtext';rgb_attribute='style.backgroundColor';coloropt_init('x','opacity')">背景颜色</button></div>
-                字体大小：<br><input id='textsizerange' class="range" type='range' min='0' max='360' value='72' oninput="applytext('sizerange')"/><div style="display:inline-block"><input id='textsizeinput' class="input" value="72" oninput='applytext()'/>像素</div>
+                <div><button onclick="rgb_id='showtext';rgb_attribute='style.color';coloropt_init('x','opacity')">字体颜色</button><button onclick="rgb_id='showtext';rgb_attribute='style.backgroundColor';coloropt_init('x','opacity')">背景颜色</button></div>
+                字体大小：<br><input id='textsizerange' class="range" type='range' min='0' max='360' value='72' oninput="applytext('sizerange')"/><div style="display:inline-block"><input type="number" id='textsizeinput' class="input" value="72" oninput='applytext()'/>像素</div>
             </div>
 
             <!--图片设置界面-->
             <div id="imgopt">
                 <div id="imgopt_user">
                     <p style='margin-bottom:5px;text-align:center'>图片大小不建议超过2M，否则浏览器会卡顿甚至闪退</p>
-                    <div style="text-align:center"><button onclick="sID('imgFileInput').click()">＋ 选择本地文件</button></div>
+                    <div style="text-align:center"><button class="bigButton" onclick="sID('imgFileInput').click()">＋ 选择本地文件</button></div>
                     <input id='imgFileInput' style="display:none" type='file'/>
                 </div>
-                宽度：<input id='imgWidthRange' class="range" type='range' min='0' max='500' value='150' oninput="applyimgvid('img','range')"/><div style="display:inline-block"><input id='imgWidthInput' value='150' class="input" oninput="applyimgvid('img')"/>像素</div>
+                <div class="name">宽度：</div><input id='imgWidthRange' class="range" type='range' min='0' max='500' value='150' oninput="applyimgvid('img','range')"/><div style="display:inline-block"><input type="number" id='imgWidthInput' value='150' class="input" oninput="applyimgvid('img')"/>像素</div>
             </div>
             
             <!--视频设置界面-->
             <div id="vidopt">
                 <div id="vidopt_user">
                     <p style='margin-bottom:5px;text-align:center'>视频将在选项关闭 3 秒后开始循环播放<br>若没有响应，点一下旋转物体即可</p>
-                    <div style="text-align:center"><button onclick="sID('vidFileInput').click()">＋ 选择本地文件</button></div>
+                    <div style="text-align:center"><button class="bigButton" onclick="sID('vidFileInput').click()">＋ 选择本地文件</button></div>
                     <input id='vidFileInput' style="display:none" type='file'/>
                 </div>
-                宽度：<input id='vidWidthRange' class="range" type='range' min='0' max='500' value='150' oninput="applyimgvid('vid','range')"/><div style="display:inline-block"><input id='vidWidthInput' value='300' class="input" oninput="applyimgvid('vid')"/>像素</div>
+                <div class="name">宽度：</div><input id='vidWidthRange' class="range" type='range' min='0' max='500' value='150' oninput="applyimgvid('vid','range')"/><div style="display:inline-block"><input type="number" id='vidWidthInput' value='300' class="input" oninput="applyimgvid('vid')"/>像素</div>
             </div>
             <!--效果设置-->
             <hr>
             旋转轴：<input type="radio" name="rotateRadio" id="rotateRadioX" value="X" onclick="anglechange()"/><label for="rotateRadioX">X</label>&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="rotateRadio" id="rotateRadioY" value="Y" checked onclick="anglechange()"/><label for="rotateRadioY">Y</label><hr>
 
-            X轴：<input id='Xanglerange' class="range" type='range' min='0' max='360' oninput="anglechange('xrange')"/><div style="display:inline-block"><input id='Xangleinput' class="input" value='0' oninput='anglechange()'/>°</div><hr>
+            <div class="name">X轴：</div><input id='Xanglerange' class="range" type='range' min='0' max='360' oninput="anglechange('xrange')"/><div style="display:inline-block"><input type="number" id='Xangleinput' class="input" value='0' oninput='anglechange()'/>°</div><hr>
 
-            Y轴：<input id='Yanglerange' class="range" type='range' min='0' max='360' oninput="anglechange('yrange')"/><div style="display:inline-block"><input id='Yangleinput' class="input" value='0' oninput='anglechange()'/>°</div><hr>
+            <div class="name">Y轴：</div><input id='Yanglerange' class="range" type='range' min='0' max='360' oninput="anglechange('yrange')"/><div style="display:inline-block"><input type="number" id='Yangleinput' class="input" value='0' oninput='anglechange()'/>°</div><hr>
 
-            Z轴：<input id='Zanglerange' class="range" type='range' min='0' max='360' oninput="anglechange('zrange')"/><div style="display:inline-block"><input id='Zangleinput' class="input" value='0' oninput='anglechange()'/>°</div><hr>
+            <div class="name">Z轴：</div><input id='Zanglerange' class="range" type='range' min='0' max='360' oninput="anglechange('zrange')"/><div style="display:inline-block"><input type="number" id='Zangleinput' class="input" value='0' oninput='anglechange()'/>°</div><hr>
 
-            透视：<input id='perspectrange' class="range" type='range' min='0' max='1000' oninput="anglechange('prange')"/><div style="display:inline-block"><input id='perspectinput' class="input" value='500' oninput='anglechange()'/>像素</div><hr>
+            <div class="name">透视：</div><input id='perspectrange' class="range" type='range' min='0' max='1000' oninput="anglechange('prange')"/><div style="display:inline-block"><input type="number" id='perspectinput' class="input" value='500' oninput='anglechange()'/>像素</div><hr>
 
-            速度：<input id='speedrange' class="range" type='range' min='0' max='9999' oninput="anispeed('range')"/><div style="display:inline-block"><input id='speedinput' class="input" value='1.3' oninput='anispeed()'/>秒/转</div><hr>
+            <div class="name">速度：</div><input id='speedrange' class="range" type='range' min='0' max='9999' oninput="anispeed('range')"/><div style="display:inline-block"><input type="number" id='speedinput' class="input" value='1.3' oninput='anispeed()'/>秒/转</div><hr>
 
             <p style='margin-bottom:5px'>将透视调整至75~125可以提升图像或文字的立体感。</p>
-            <div onclick="setTimeout('reverse_shadow_sw()',10)"><input type="checkbox" id="reverse_sw"/><label for="reverse_sw"> 反向</label>&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="shadow_sw"/><label for="shadow_sw"> 阴影</label><button style="width:auto;padding:7px;font-size:13px" onclick="rgb_id='body';rgb_attribute='style.background';coloropt_init('bgimg')">更改背景</button><button style="width:auto;padding:7px;font-size:13px" onclick="sID('timeropt').style.display = 'block'">计时器</button></div>
-            <div style="text-align:center;font-size:12px">由 BUGTeas 制作<br><a href="https://github.com/BUGTeas/nugget_speens_h5" target="_blank" style="font-size:15px">Github</a>&nbsp;&nbsp;<a href="https://www.bilibili.com/video/BV1xK411r7C3" target="_blank" style="font-size:15px">Bilibili</a></div>
-            <div style="text-align:center;margin-top:10px;"><button onclick="
+            <div style="margin:10px 0px 5px 0px;">
+                <input type="checkbox" id="reverse_sw" onclick="reverse_shadow_sw()"/><label for="reverse_sw" style="margin-right:5px">反向</label>
+                <input type="checkbox" id="shadow_sw" onclick="reverse_shadow_sw()" checked/><label for="shadow_sw" style="margin-right:5px">阴影</label>
+                <input type="checkbox" id="shake_sw" onclick="anglechange()" checked/><label for="shake_sw" style="margin-right:5px">上下晃动</label>
+                <input type="checkbox" id="fullscreen_sw" onclick="launchFullscreen(document.documentElement)"/><label for="fullscreen_sw">全屏</label>
+            </div>
+            <button onclick="rgb_id='body';rgb_attribute='style.background';coloropt_init('bgimg')">更改背景</button>
+            <button onclick="sID('timeropt').style.display = 'block'">计时器</button>
+            <div style="display:inline-block;margin-top:7px;font-size:12px">由 BUGTeas 制作<br><a href="https://github.com/BUGTeas/nugget_speens_h5" target="_blank" style="font-size:15px">Github</a>&nbsp;&nbsp;<a href="https://www.bilibili.com/video/BV1xK411r7C3" target="_blank" style="font-size:15px">Bilibili</a></div>
+            <div style="text-align:center;margin-top:10px;"><button class="bigButton" onclick="
                 loadtime();
                 sID('option').style.display = 'none';
                 if(sID('tips')) sID('tips').style.display = 'block';
@@ -389,14 +423,35 @@
                 }
             }
 
-            //旋转框架尺寸
+            //进入全屏
+            function launchFullscreen(element) {
+                if (document.fullscreenElement) exitFullscreen();
+                else if (element.requestFullscreen) element.requestFullscreen();
+                else if (element.mozRequestFullScreen) element.mozRequestFullScreen();
+                else if (element.msRequestFullscreen) element.msRequestFullscreen();
+                else if (element.webkitRequestFullscreen) element.webkitRequestFullScreen();
+            }
+
+            //退出全屏
+            function exitFullscreen() {
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.mozExitFullScreen) document.mozExitFullScreen();
+                else if (document.msExitFullscreen) document.msExitFullscreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullScreen();
+            }
+
+            //检测窗口变化自动调整尺寸
             lastsize = 0;
             function autoresize(){
                 var winbody = document.body;
                 if(winbody.clientWidth - winbody.clientHeight!=lastsize) applyresize();
                 setTimeout("autoresize()",25)
+                //当用户通过其他途径退出全屏后取消勾选全屏选项
+                if (document.fullscreenElement) sID("fullscreen_sw").checked = true;
+                else sID("fullscreen_sw").checked = false;
             }
 
+            //旋转框架尺寸
             function applyresize(){
                 var rotationbox = sID("rotationbox");
                 var shadowbox = sID("shadowbox");
@@ -420,7 +475,8 @@
                 shadowbox.style.height = boxHeight / 5 + "px";
                 document.title = "万物皆可旋转（" + rotationbox.style.width + " x " + rotationbox.style.height + "）";
                 headHeight = (winbody.clientHeight - rotationbox.clientHeight) / 2
-                rotationbox.style.marginLeft = shadowbox.style.marginLeft = (winbody.clientWidth - rotationbox.clientWidth) / 2 + "px";
+                if(winbody.clientWidth>=720&&sID("option").style.display!="none") rotationbox.style.marginLeft = shadowbox.style.marginLeft = ((winbody.clientWidth - rotationbox.clientWidth) / 2 - 180)+ "px";
+                else rotationbox.style.marginLeft = shadowbox.style.marginLeft = (winbody.clientWidth - rotationbox.clientWidth) / 2 + "px";
                 lastsize = winbody.clientWidth - winbody.clientHeight
                 setTimeout("applyresize()",500);
                 anglechange();
@@ -447,13 +503,28 @@
                     zrange.value = Number(zinput.value) + 180;
                     prange.value = 1000 - pinput.value;
                 }
+                //旋转轴
+                var rMod = "X";
                 if(sID("rotateRadioY").checked) var rMod = "Y";
-                if(sID("rotateRadioX").checked) var rMod = "X";
-                var BoxV = boxHeight / 10;
-                var BoxIV = boxHeight / 5;
-                var BoxII = boxHeight / 10;
-                var BoxI = boxHeight / 7;
-                aniset.innerHTML = "@keyframes headanimation{0%{margin-top:" + Number(headHeight + BoxV) + "px}50%{margin-top:" + Number(headHeight - BoxV) + "px}100%{margin-top:" + Number(headHeight + BoxV) + "px}}  @keyframes shadowanimation{0%{filter:blur(" + BoxII + "px);margin-top:" + Number(BoxIV - BoxV) + "px}50%{filter:blur(" + BoxI + "px);margin-top:" + Number(BoxIV + BoxV) + "px}100%{filter:blur(" + BoxII + "px);margin-top:" + Number(BoxIV - BoxV) + "px}}  @keyframes boxanimation{0%{transform:perspective(" + pinput.value + "px) rotate" + rMod + "(" + rotateAngle[0] + "deg) rotateX(" + xinput.value + "deg) rotateY(" + yinput.value + "deg) rotateZ(" + zinput.value + "deg)}100%{transform:perspective(" + pinput.value + "px) rotate" + rMod + "(" + rotateAngle[1] + "deg) rotateX(" + xinput.value + "deg) rotateY(" + yinput.value + "deg) rotateZ(" + zinput.value + "deg)}}"
+                //上下晃动距离
+                var shakeDistance = boxHeight / 10;
+                if(!sID("shake_sw").checked) var shakeDistance = 0;
+                //上下晃动阴影变化
+                var shdUpBlur = boxHeight / 7;
+                var shdDnBlur = boxHeight / 10;
+                if(!sID("shake_sw").checked) var shdDnBlur = shdUpBlur = boxHeight / 8.5;
+                //上下晃动阴影距离变化
+                var ShadowMargin = boxHeight / 5;
+                var shdUpMarg = ShadowMargin + shakeDistance;
+                var shdDnMarg = ShadowMargin - shakeDistance;
+                //上下晃动顶部高度变化
+                var headUpMarg = headHeight + shakeDistance;
+                var headDnMarg = headHeight - shakeDistance;
+                //应用动画
+                aniset.innerHTML = "" +
+                "@keyframes headanimation{0%{margin-top:" + headUpMarg + "px}50%{margin-top:" + headDnMarg + "px}100%{margin-top:" + headUpMarg + "px}}" +
+                "@keyframes shadowanimation{0%{filter:blur(" + shdDnBlur + "px);margin-top:" + shdDnMarg + "px}50%{filter:blur(" + shdUpBlur + "px);margin-top:" + shdUpMarg + "px}100%{filter:blur(" + shdDnBlur + "px);margin-top:" + shdDnMarg + "px}}" +
+                "@keyframes boxanimation{0%{transform:perspective(" + pinput.value + "px) rotate" + rMod + "(" + rotateAngle[0] + "deg) rotateX(" + xinput.value + "deg) rotateY(" + yinput.value + "deg) rotateZ(" + zinput.value + "deg)}100%{transform:perspective(" + pinput.value + "px) rotate" + rMod + "(" + rotateAngle[1] + "deg) rotateX(" + xinput.value + "deg) rotateY(" + yinput.value + "deg) rotateZ(" + zinput.value + "deg)}}"
             }
 
             //应用动画速度
@@ -717,7 +788,6 @@
             //初始化
             imgSrc = "./nugget.png"
             vidSrc = "./test.mp4"
-            sID("shadow_sw").checked = "true";
             reverse_shadow_sw("load");
             timer_optapply('sizerange')
             autoresize();
