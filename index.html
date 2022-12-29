@@ -2,12 +2,14 @@
 <html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=10"/>
+    <link rel="shortcut icon" href="./nugget.png"/>
     <head>
         <style>
             html,body{
                 margin:0;
                 height:100%;
                 overflow:hidden;
+                font-family:"microsoft yahei",sans-serif;
             }
             /*阴影圆角*/
             #shadowbox{
@@ -23,13 +25,10 @@
             #option{
                 position:absolute;
                 z-index:3;
-                background:rgba(123,123,123,0.5);
                 top:0;
                 right:0;
                 padding:20px;
                 overflow:auto;
-                min-height:auto;
-                max-height:calc(100% - 40px);
                 font-size:13px;
                 animation-name:optionEject;
                 animation-duration:150ms;
@@ -77,6 +76,7 @@
                 padding:10px;
                 font-size:15px;
                 margin:10px;
+                margin-left:calc(50% - 75px);
                 width:150px;
             }
             /*选项按钮点击后*/
@@ -89,6 +89,7 @@
             #option .bigButton:active{
                 transform:scale(0.95);
             }
+            /*选项名称*/
             #option .name{
                 display:inline-block;
                 text-align:right;
@@ -216,6 +217,7 @@
         <div id="rotationbox"></div>
         <!--阴影-->
         <div id="shadowbox"></div>
+        <!--计时器-->
         <div id="timer" style="background:rgba(17,69,20,0);color:rgba(0,0,0,1)">11:45:14</div>
 
 
@@ -242,20 +244,20 @@
             <div id="imgopt">
                 <div id="imgopt_user">
                     <p style='margin-bottom:5px;text-align:center'>图片大小不建议超过2M，否则浏览器会卡顿甚至闪退</p>
-                    <div style="text-align:center"><button class="bigButton" onclick="sID('imgFileInput').click()">＋ 选择本地文件</button></div>
+                    <button class="bigButton" onclick="sID('imgFileInput').click()">＋ 选择本地文件</button>
                     <input id='imgFileInput' style="display:none" type='file'/>
                 </div>
-                <div class="name">宽度：</div><input id='imgWidthRange' class="range" type='range' min='0' max='500' value='150' oninput="applyimgvid('img','range')"/><div style="display:inline-block"><input type="number" id='imgWidthInput' value='150' class="input" oninput="applyimgvid('img')"/>像素</div>
+                <div class="name">宽度：</div><input id='imgWidthRange' class="range" type='range' min='0' max='500' value='150' oninput="resizeImgVid('img','range')"/><div style="display:inline-block"><input type="number" id='imgWidthInput' value='150' class="input" oninput="resizeImgVid('img')"/>像素</div>
             </div>
             
             <!--视频设置界面-->
             <div id="vidopt">
                 <div id="vidopt_user">
                     <p style='margin-bottom:5px;text-align:center'>视频将在选项关闭 3 秒后开始循环播放<br>若没有响应，点一下旋转物体即可</p>
-                    <div style="text-align:center"><button class="bigButton" onclick="sID('vidFileInput').click()">＋ 选择本地文件</button></div>
+                    <button class="bigButton" onclick="sID('vidFileInput').click()">＋ 选择本地文件</button>
                     <input id='vidFileInput' style="display:none" type='file'/>
                 </div>
-                <div class="name">宽度：</div><input id='vidWidthRange' class="range" type='range' min='0' max='500' value='150' oninput="applyimgvid('vid','range')"/><div style="display:inline-block"><input type="number" id='vidWidthInput' value='300' class="input" oninput="applyimgvid('vid')"/>像素</div>
+                <div class="name">宽度：</div><input id='vidWidthRange' class="range" type='range' min='0' max='500' value='150' oninput="resizeImgVid('vid','range')"/><div style="display:inline-block"><input type="number" id='vidWidthInput' value='300' class="input" oninput="resizeImgVid('vid')"/>像素</div>
             </div>
             <!--效果设置-->
             <hr>
@@ -281,18 +283,19 @@
             <button onclick="rgb_id='body';rgb_attribute='style.background';coloropt_init('bgimg')">更改背景</button>
             <button onclick="sID('timeropt').style.display = 'block'">计时器</button>
             <div style="display:inline-block;margin-top:7px;font-size:12px">由 BUGTeas 制作<br><a href="https://github.com/BUGTeas/nugget_speens_h5" target="_blank" style="font-size:15px">Github</a>&nbsp;&nbsp;<a href="https://www.bilibili.com/video/BV1xK411r7C3" target="_blank" style="font-size:15px">Bilibili</a></div>
-            <div style="text-align:center;margin-top:10px;"><button class="bigButton" onclick="
+            <button class="bigButton" onclick="
                 loadtime();
                 sID('option').style.display = 'none';
+                applyresize();
                 if(sID('tips')) sID('tips').style.display = 'block';
-            ">关闭</button></div>
+            ">关闭</button>
         </div>
 
-        <!--背景图片/颜色设置界面-->
+        <!--计时器设置界面-->
         <div class="window_bg" id="timeropt">
             <div style="height:calc(50% - 170px);"></div>
             <div class="window" id="timeropt_window">
-                <div style="margin-bottom:10px;height:30px">
+                <div style="min-height:20px">
                     <div style="font-size:15px;display:inline-block">计时器</div>
                     <button class="window_close" onclick="sID('timeropt').style.display = 'none'">×</button>
                 </div>
@@ -320,48 +323,49 @@
         <div class="window_bg" id="rgbeditor">
             <div style="height:calc(50% - 170px);"></div>
             <div class="window" id="rgbeditor_window">
-            <div style="margin-bottom:10px;min-height:20px"><span id="bgopt_sw" style="display:none">
-                    <div class="optsw" id="bgimg_sw" onclick="coloropt_mode(this.id)">图片</div>
-                    <div style="display:inline-block;width:20px;"></div>
-                    <div class="optsw" id="rgbedt_sw" onclick="coloropt_mode(this.id)">颜色</div>
-                </span>
-                <button style="float:right;border:none;background:none;padding:0px;margin:0px;font-size:20px;font-weight:bolder;font-family:monospace;color:#555" onclick="sID('rgbeditor').style.display = 'none'">×</button>
-            </div>
-            <div id="bgimg">
-                <p style='margin-bottom:5px;text-align:center'>图片大小不建议超过2M，否则浏览器会卡顿甚至闪退</p>
-                <div style="text-align:center"><button id="bgimg_input_btn" onclick="sID('bgimg_input').click()">＋ 选择本地文件</button></div>
-                <input id='bgimg_input' style="display:none" type='file'/>
-            </div>
-            <table id="rgbedt">
-                <tr>
-                    <td class="rgbeditor_optname">红</td>
-                    <td><input type="range" min='0' max='255' class="rgbeditor_range" id="rgbeditor_range_r" oninput="rgbeditor_rgba(this.id)"/></td>
-                    <td><input type="number" class="rgbeditor_input" id="rgbeditor_input_r" oninput="rgbeditor_rgba(this.id)"/></td>
-                </tr>
-                <tr>
-                    <td class="rgbeditor_optname">绿</td>
-                    <td><input type="range" min='0' max='255' class="rgbeditor_range" id="rgbeditor_range_g" oninput="rgbeditor_rgba(this.id)"/></td>
-                    <td><input type="number" class="rgbeditor_input" id="rgbeditor_input_g" oninput="rgbeditor_rgba(this.id)"/></td>
-                </tr>
-                <tr>
-                    <td class="rgbeditor_optname">蓝</td>
-                    <td><input type="range" min='0' max='255' class="rgbeditor_range" id="rgbeditor_range_b" oninput="rgbeditor_rgba(this.id)"/></td>
-                    <td><input type="number" class="rgbeditor_input" id="rgbeditor_input_b" oninput="rgbeditor_rgba(this.id)"/></td>
-                </tr>
-                <tr>
-                    <td class="rgbeditor_optname">16进制</td>
-                    <td colspan="2"><input class="rgbeditor_input" style="width:auto" id="rgbeditor_hex" value="#fff" onblur="rgbeditor_rgba(this.id)"/></td>
-                </tr>
-                <tr id="rgbeditor_opacity" style="display:none">
-                    <td class="rgbeditor_optname">透明度</td>
-                    <td><input type="range" min='0' max='100' class="rgbeditor_range" id="rgbeditor_range_a" oninput="rgbeditor_rgba(this.id)"/></td>
-                    <td><input type="number" class="rgbeditor_input" id="rgbeditor_input_a" oninput="rgbeditor_rgba(this.id)"/></td>
-                </tr>
-                <tr>
-                    <td class="rgbeditor_optname" colspan="2">预览</td>
-                    <td><div class="rgbeditor_input" style="padding:0px;float:right;width:50px;height:25px;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAABFSURBVChTnY/BCQAwCANN53J73cv2IZUqUvA+BhIwgYgYJZjZVbD8fpkFAbiqPEGzUveCYxZXVV0Fbcdcow3mR7PVPUQbAmQQV9LXPVwAAAAASUVORK5CYII=);overflow:hidden"><div id="rgbeditor_preview" style="height:100%;width:100%"></div></div></td>
-                </tr>
-            </table>
+                <div style="min-height:20px">
+                    <span id="bgopt_sw">
+                        <div class="optsw" id="bgimg_sw" onclick="coloropt_mode(this.id)">图片</div>
+                        <div style="display:inline-block;width:20px;"></div>
+                        <div class="optsw" id="rgbedt_sw" onclick="coloropt_mode(this.id)">颜色</div>
+                    </span>
+                    <button class="window_close" onclick="sID('rgbeditor').style.display = 'none'">×</button>
+                </div>
+                <div id="bgimg">
+                    <p style='margin-bottom:5px;text-align:center'>图片大小不建议超过2M，否则浏览器会卡顿甚至闪退</p>
+                    <div style="text-align:center"><button id="bgimg_input_btn" onclick="sID('bgimg_input').click()">＋ 选择本地文件</button></div>
+                    <input id='bgimg_input' style="display:none" type='file'/>
+                </div>
+                <table id="rgbedt">
+                    <tr>
+                        <td class="rgbeditor_optname">红</td>
+                        <td><input type="range" min='0' max='255' class="rgbeditor_range" id="rgbeditor_range_r" oninput="rgbeditor_rgba(this.id)"/></td>
+                        <td><input type="number" class="rgbeditor_input" id="rgbeditor_input_r" oninput="rgbeditor_rgba(this.id)"/></td>
+                    </tr>
+                    <tr>
+                        <td class="rgbeditor_optname">绿</td>
+                        <td><input type="range" min='0' max='255' class="rgbeditor_range" id="rgbeditor_range_g" oninput="rgbeditor_rgba(this.id)"/></td>
+                        <td><input type="number" class="rgbeditor_input" id="rgbeditor_input_g" oninput="rgbeditor_rgba(this.id)"/></td>
+                    </tr>
+                    <tr>
+                        <td class="rgbeditor_optname">蓝</td>
+                        <td><input type="range" min='0' max='255' class="rgbeditor_range" id="rgbeditor_range_b" oninput="rgbeditor_rgba(this.id)"/></td>
+                        <td><input type="number" class="rgbeditor_input" id="rgbeditor_input_b" oninput="rgbeditor_rgba(this.id)"/></td>
+                    </tr>
+                    <tr>
+                        <td class="rgbeditor_optname">16进制</td>
+                        <td colspan="2"><input class="rgbeditor_input" style="width:auto" id="rgbeditor_hex" value="#fff" onblur="rgbeditor_rgba(this.id)"/></td>
+                    </tr>
+                    <tr id="rgbeditor_opacity" style="display:none">
+                        <td class="rgbeditor_optname">透明度</td>
+                        <td><input type="range" min='0' max='100' class="rgbeditor_range" id="rgbeditor_range_a" oninput="rgbeditor_rgba(this.id)"/></td>
+                        <td><input type="number" class="rgbeditor_input" id="rgbeditor_input_a" oninput="rgbeditor_rgba(this.id)"/></td>
+                    </tr>
+                    <tr>
+                        <td class="rgbeditor_optname" colspan="2">预览</td>
+                        <td><div class="rgbeditor_input" style="padding:0px;float:right;width:50px;height:25px;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAAWSURBVBhXYzh8+PB/EGAEEUeOHGEAAIE5DY5tDyfKAAAAAElFTkSuQmCC);background-size:20%;image-rendering:pixelated;overflow:hidden"><div id="rgbeditor_preview" style="height:100%;width:100%"></div></div></td>
+                    </tr>
+                </table>
             </div>
         </div>
 
@@ -420,12 +424,14 @@
                 if(sID("option").style.display=="none"){
                     sID("option").style.display = "block";
                     if(sID("tips")) sID("tips").remove();
+                    applyresize();
                 }
             }
 
             //进入全屏
             function launchFullscreen(element) {
-                if (document.fullscreenElement) exitFullscreen();
+                var ele = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+                if(ele) exitFullscreen();
                 else if (element.requestFullscreen) element.requestFullscreen();
                 else if (element.mozRequestFullScreen) element.mozRequestFullScreen();
                 else if (element.msRequestFullscreen) element.msRequestFullscreen();
@@ -441,44 +447,61 @@
             }
 
             //检测窗口变化自动调整尺寸
-            lastsize = 0;
+            lastsize = document.body.clientWidth - document.body.clientHeight;
+            lastboxsize = 0;
             function autoresize(){
-                var winbody = document.body;
-                if(winbody.clientWidth - winbody.clientHeight!=lastsize) applyresize();
+                var newsize = document.body.clientWidth - document.body.clientHeight;
+                if(newsize!=lastsize) applyresize();
+                lastsize = newsize;
+                var showname = ["img","vid","text"];
+                for(i=0;i<showname.length;i++){
+                    if(sID("show" + showname[i])){
+                        var nowboxsize = sID("show" + showname[i]).clientWidth - sID("show" + showname[i]).clientHeight;
+                        if(nowboxsize!=lastboxsize) applyresize();
+                        lastboxsize = nowboxsize;
+                    }
+                }
                 setTimeout("autoresize()",25)
                 //当用户通过其他途径退出全屏后取消勾选全屏选项
-                if (document.fullscreenElement) sID("fullscreen_sw").checked = true;
+                var ele = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+                if(ele) sID("fullscreen_sw").checked = true;
                 else sID("fullscreen_sw").checked = false;
             }
 
             //旋转框架尺寸
+            resizeCount = 1;
             function applyresize(){
+                console.log("第 " + resizeCount + " 次调整尺寸");
+                resizeCount++
                 var rotationbox = sID("rotationbox");
                 var shadowbox = sID("shadowbox");
                 var winbody = document.body;
                 if(winbody.clientWidth>=360) sID("option").style.width = "320px";
                 else sID("option").style.width = "calc(100% - 40px)";
-                var showname = "none"
-                if(sID("showimg")) var showname = "showimg";
-                if(sID("showvid")) var showname = "showvid";
-                if(sID("showtext")) var showname = "showtext";
-                if(showname!="none") showname = sID(showname);
-                if(showname){
-                    boxWidth = showname.clientWidth;
-                    boxHeight = showname.clientHeight;
-                }else{
-                    boxWidth = "300";
-                    boxHeight = "300";
+                var showname = ["none","img","vid","text"];
+                for(i=0;i<showname.length;i++){
+                    if(showname[i]=="none") boxWidth = boxHeight = "300";
+                    else if(sID("show" + showname[i])){
+                        var show = sID("show" + showname[i]);
+                        boxWidth = show.clientWidth;
+                        boxHeight = show.clientHeight;
+                    }
                 }
                 rotationbox.style.width = shadowbox.style.width = boxWidth + "px";
                 rotationbox.style.height = boxHeight + "px";
                 shadowbox.style.height = boxHeight / 5 + "px";
                 document.title = "万物皆可旋转（" + rotationbox.style.width + " x " + rotationbox.style.height + "）";
                 headHeight = (winbody.clientHeight - rotationbox.clientHeight) / 2
-                if(winbody.clientWidth>=720&&sID("option").style.display!="none") rotationbox.style.marginLeft = shadowbox.style.marginLeft = ((winbody.clientWidth - rotationbox.clientWidth) / 2 - 180)+ "px";
-                else rotationbox.style.marginLeft = shadowbox.style.marginLeft = (winbody.clientWidth - rotationbox.clientWidth) / 2 + "px";
-                lastsize = winbody.clientWidth - winbody.clientHeight
-                setTimeout("applyresize()",500);
+                if(winbody.clientWidth>=boxWidth + 400&&sID("option").style.display!="none"){
+                    var mgl = 190;
+                    var optStyle = "height:calc(100% - 40px);background-color:#c8c8c8;";
+                }
+                else{
+                    var mgl = 0;
+                    var optStyle = "min-height:auto;max-height:calc(100% - 40px);background:rgba(150,150,150,0.5);";
+                }
+                if(sID("option").style.display!="none") sID("option").style = optStyle;
+                rotationbox.style.marginLeft = shadowbox.style.marginLeft = ((winbody.clientWidth - rotationbox.clientWidth) / 2 - mgl)+ "px";
                 anglechange();
             }
             
@@ -551,44 +574,51 @@
             function showmode(name){
                 if(name=="txtopt_sw") applytext();
                 else applyimgvid(name.substring(0,3));
-                var optList = ["txt","img","vid"];
+                var optList = sID("option").getElementsByClassName("optsw");
                 for(i=0;i<optList.length;i++){
-                    sID(optList[i] + "opt").style.display = "none";
-                    sID(optList[i] + "opt_sw").style = "border-bottom:3px solid rgba(0,0,0,0)";
+                    sID(optList[i].id.split("_")[0]).style.display = "none";
+                    sID(optList[i].id).style = "border-bottom:3px solid rgba(0,0,0,0)";
                 }
                 sID(name.substring(0,6)).style.display = "block";
                 sID(name).style = "font-weight:bold;border-bottom:3px solid royalblue";
             }
 
-            //加载用户图片
-            function imageget(){
+            //加载用户文件
+            function fileget(mode){
                 var file = anyimg.files[0];
+                function al(word){alert("请确保文件为" + word + "类型,否则将无法显示");}
                 if(imgOrVid=="img"){
-                    if(!/image\/\w+/.test(file.type)) alert("请确保文件为图像类型,否则将无法显示");
+                    if(!/image\/\w+/.test(file.type)) al("图片")
                     imgSrc = URL.createObjectURL(file);
                 }else if(imgOrVid=="vid"){
-                    if(!/video\/\w+/.test(file.type)) alert("请确保文件为视频类型,否则将无法显示");
+                    if(!/video\/\w+/.test(file.type)) al("视频");
                     vidSrc = URL.createObjectURL(file);
                 }
                 applyimgvid(imgOrVid);
             }
 
-            //应用图片
-            function applyimgvid(mode,range){
+            //应用图片/视频
+            function applyimgvid(mode){
+                if(mode=="img") var element = "<img src='" + imgSrc + "' id='showimg'/>";
+                if(mode=="vid") var element = "<video style='background-color:rgba(95,95,95,0.7)' id='showvid' loop onclick='this.play()'><source src='" + vidSrc + "'></video>";
+                sID("rotationbox").innerHTML = element;
+                if(sID("showvid")) sID("showvid").play();
+                resizeImgVid(mode);
+                //用户导入文件
+                if(window.FileReader){
+                    imgOrVid = mode;
+                    anyimg = sID(mode + "FileInput");
+                    anyimg.addEventListener('change',fileget,false);
+                }else sID(mode + "opt_user").innerHTML = "您的浏览器不支持自定义文件。";
+            }
+
+            //调整图片/视频宽度
+            function resizeImgVid(mode,range){
                 var rge = sID(mode + "WidthRange");
                 var ipt = sID(mode + "WidthInput");
                 if(range=="range") ipt.value = rge.value;
                 else rge.value = ipt.value;
-                if(mode=="img") var element = "<img src='" + imgSrc + "' id='showimg' style='width:" + ipt.value + "px'/>";
-                if(mode=="vid") var element = "<video style='width:" + ipt.value + "px' id='showvid' loop onclick='this.play()'><source src='" + vidSrc + "'></video>"
-                imgOrVid = mode;
-                sID("rotationbox").innerHTML = element;
-                //用户导入图片
-                if(window.FileReader){
-                    anyimg = sID(mode + "FileInput");
-                    anyimg.addEventListener('change',imageget,false);
-                }else sID(mode + "opt_user").innerHTML = "您的浏览器不支持自定义文件。";
-                applyresize();
+                sID("show" + mode).style.width = ipt.value + "px";
             }
             
             //应用文字
@@ -608,7 +638,6 @@
                 else var txtBg = txtSet.style.backgroundColor;
                 paddingSet = sizeInput.value / 4;
                 txtSet.style = "white-space:nowrap;float:left;font-size:" + sizeInput.value + "px;padding:" + paddingSet + "px;border-radius:" + paddingSet + "px;color:" + txtColor + ";background-color:" + txtBg;
-                applyresize();
             }
 
             //打开背景图片/颜色设置界面
@@ -616,7 +645,7 @@
                 sID("rgbeditor").style.display = "block";
                 if(bgimg_enable=="bgimg"){
                     sID("bgopt_sw").style.display = "inline"
-                    if(document.body.style.background.substring(0,3)=="url") coloropt_mode();
+                    if(document.body.style.background.substring(0,3)=="url") coloropt_mode("bgimg_sw");
                     else coloropt_mode("rgbedt_sw",opacity);
                 }
                 else{
@@ -627,12 +656,10 @@
 
             //切换背景图片/颜色模式
             function coloropt_mode(name,opacity){
-                var highlight = "font-weight:bold;border-bottom:3px solid royalblue";
-                var nolight = "border-bottom:3px solid rgba(0,0,0,0)"
-                var optList = ["rgbedt","bgimg"];
+                var optList = sID("bgopt_sw").getElementsByClassName("optsw");
                 for(i=0;i<optList.length;i++){
-                    sID(optList[i]).style.display = "none";
-                    sID(optList[i] + "_sw").style = nolight;
+                    sID(optList[i].id.split("_")[0]).style.display = "none";
+                    sID(optList[i].id).style = "border-bottom:3px solid rgba(0,0,0,0)";
                 }
                 if(name=="rgbedt_sw"){
                     rgbeditor_initbyid(rgb_id,rgb_attribute,opacity);
@@ -642,7 +669,7 @@
                     bgimg_init();
                     sID("bgimg").style.display = "block";
                 }
-                sID(name).style = highlight;
+                sID(name).style = "font-weight:bold;border-bottom:3px solid royalblue";
             }
 
             //导入背景图片
@@ -687,8 +714,7 @@
 
             //计时器拖拽调整位置
             var moveit = sID("timer");
-            moveit.style.top = "0px";
-            moveit.style.left = "0px";
+            moveit.style.top = moveit.style.left = "0px";
             //鼠标
             moveit.onmousedown = function(event){
                 clickReaction = "none";
@@ -718,8 +744,8 @@
                 return false;
             }
 
-            //计时器分秒钟
-            function timeminsec(params){
+            //计时器分/秒钟
+            function timeminsec(){
                 if(timework=="enabled") setTimeout("timeminsec()",1000);
                 secondnum++;
                 if(secondnum==60){
@@ -749,22 +775,24 @@
                 if(timework=="enabled"){
                     if(String(minutenum).length==1) minutenum = "0" + minutenum;
                     if(String(secondnum).length==1) secondnum = "0" + secondnum;
-                    timefull = minutenum + ":" + secondnum + ":" + msnumx + msnum;
-                    sID("timer").innerHTML = timefull;
+                    sID("timer").innerHTML = minutenum + ":" + secondnum + ":" + msnumx + msnum;
                     setTimeout("timedisplay()",1);
                 }
             }
             
             //初始化计时器
-            function loadtime(mode){
-                if(mode!="noreset") readyCountdown = 3;
-                if(readyCountdown==0){
+            readyTimeMode = 0;
+            function loadtime(timeMode,mode){
+                if(mode!="noreset"){
+                    timework = "disabled";
+                    readyCntdn = 3;
+                    readyTimeMode++;
+                    var timeMode = readyTimeMode;
+                }
+                if(readyCntdn==0){
                     if(sID("timer").style.display!="none"){
                         timework = "enabled";
-                        minutenum = 0
-                        secondnum = 0;
-                        msnumx = 0;
-                        msnum = 0;
+                        minutenum = secondnum = msnumx = msnum = 0;
                         setTimeout("timeminsec()",1000);
                         setTimeout("timemsx()",100);
                         setTimeout("timems()",10);
@@ -777,23 +805,21 @@
                     }
                 }
                 else{
-                    timework = "disabled";
-                    if(sID("timer").style.display!="none") 
-                    sID("timer").innerHTML = readyCountdown + " 秒后开始";
-                    readyCountdown = readyCountdown - 1;
-                    setTimeout("loadtime('noreset')",1000);
+                    if(sID("timer").style.display!="none") sID("timer").innerHTML = readyCntdn + " 秒后开始";
+                    readyCntdn = readyCntdn - 1;
+                    setTimeout("if(" + timeMode + "==readyTimeMode) loadtime(" + timeMode + ",'noreset')",1000);
                 }
             }
 
             //初始化
-            imgSrc = "./nugget.png"
+            imgSrc = "./nugget.png?20221229"
             vidSrc = "./test.mp4"
             reverse_shadow_sw("load");
-            timer_optapply('sizerange')
+            timer_optapply('sizerange');
             autoresize();
             showmode("imgopt_sw");
             anispeed();
-            sID("loadingMask").remove();
+            sID("loadingMask").parentNode.removeChild(sID("loadingMask"));
         </script>
     </body>
 </html>
