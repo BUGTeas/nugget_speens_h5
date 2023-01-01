@@ -1,209 +1,11 @@
 <!DOCTYPE html>
 <html>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=10"/>
-    <link rel="shortcut icon" href="./nugget.png"/>
     <head>
-        <style>
-            html,body{
-                margin:0;
-                height:100%;
-                overflow:hidden;
-                font-family:"microsoft yahei",sans-serif;
-            }
-            /*阴影圆角*/
-            #shadowbox{
-                border-radius:50%;
-            }
-            /*计时器悬浮、鼠标指针、禁用选择文字*/
-            #timer{
-                position:absolute;
-                user-select:none;
-                cursor:move;
-            }
-            /*选项界面*/
-            #option{
-                position:absolute;
-                z-index:3;
-                top:0;
-                right:0;
-                padding:20px;
-                overflow:auto;
-                font-size:13px;
-                animation-name:optionEject;
-                animation-duration:150ms;
-                animation-timing-function:ease-out;
-            }
-            /*向下弹出选项*/
-            @keyframes optionEject{
-                0%{
-                    opacity:0;
-                    top:-40px;
-                }
-                100%{
-                    opacity:1;
-                    top:0px;
-                }
-            }
-            /*滑动条*/
-            .range{
-                min-width:calc(100% - 150px);
-                max-width:100px;
-            }
-            /*输入框*/
-            .input{
-                width:50px;
-                border:1px solid #999;
-                border-radius:7px;
-                margin:5px;
-                padding:5px;
-            }
-            /*选项按钮*/
-            #option button{
-                background:rgb(46, 102, 255);
-                color:#fff;
-                border:none;
-                border-radius:5px;
-                margin:10px 10px 10px 0px;
-                transition-property:all;
-                transition-duration:200ms;
-                vertical-align:top;
-                padding:7px;
-                font-size:13px;
-            }
-            /*大选项按钮*/
-            #option .bigButton{
-                padding:10px;
-                font-size:15px;
-                margin:10px;
-                margin-left:calc(50% - 75px);
-                width:150px;
-            }
-            /*选项按钮点击后*/
-            #option button:hover{
-                background:rgb(100, 142, 255);
-            }
-            #option button:active{
-                transform:scale(0.91);
-            }
-            #option .bigButton:active{
-                transform:scale(0.95);
-            }
-            /*选项名称*/
-            #option .name{
-                display:inline-block;
-                text-align:right;
-                max-width:auto;
-                min-width:40px;
-            }
-            /*选项卡切换*/
-            #option .optsw{
-                display:inline-block;
-                font-size:20px;
-                user-select:none;
-                padding-bottom:5px;
-                margin:0px 20px 10px 0px;
-            }
-            #option .optsw:hover{
-                font-weight:bolder;
-            }
-            /*文本选项大文本框*/
-            #inputtext{
-                border:1px solid #999;
-                border-radius:7px;
-                padding:5px;
-                min-width:calc(100% - 10px);
-                max-width:calc(100% - 10px);
-                min-height:50px;
-                max-height:200px;
-            }
-            /*分隔线*/
-            hr{
-                border:0.5px solid #aaa;
-            }
-
-            
-            .window_bg{
-                width:100%;
-                height:100%;
-                top:0px;
-                left:0px;
-                background:rgba(128,128,128,0.5);
-                position:absolute;
-                z-index:4;
-                display:none;
-            }
-            .window{
-                width:250px;
-                height:300px;
-                background:#fff;
-                box-shadow:0px 7px 12px rgba(128,128,128,0.5);
-                margin-left:calc(50% - 145px);
-                padding:20px;
-                border:1px solid #ddd;
-                border-radius:5px;
-            }
-            .window div,.window table{
-                margin-bottom:10px;
-            }
-            .window_button{
-                border:none;
-                border-radius:3px;
-                background-color:rgb(41, 108, 255);
-                color:white;
-                padding:7px;
-                margin-right:10px;
-                font-size:13px;
-            }
-            .window_close{
-                float:right;
-                border:none;
-                background:none;
-                padding:0px;
-                margin:0px;
-                font-size:25px;
-                font-family:'Lucida console',monospace;
-                color:#555;
-            }
-            #rgbeditor_window .optsw{
-                display:inline-block;
-                font-size:20px;
-                user-select:none;
-                padding-bottom:5px;
-                margin-bottom:10px;
-            }
-            #rgbeditor_window table{
-                border-collapse:collapse;
-                width:100%;
-            }
-            #rgbeditor_window table td{
-                text-align:right;
-                padding:7px 0 7px 0;
-            }
-            .rgbeditor_input{
-                width:40px;
-                border:1px solid #ccc;
-                border-radius:3px;
-                padding:5px;
-                margin-left:2px;
-            }
-            #bgimg_input_btn{
-                width:120px;
-                border:none;
-                border-radius:3px;
-                background-color:rgb(41, 108, 255);
-                color:white;
-                padding:10px;
-                margin-left:10px;
-            }
-            .rgbeditor_range{
-                width:calc(100% - 5px);
-                margin-left:5px;
-            }
-            .rgbeditor_optname{
-                font-size:15px;
-            }
-        </style>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=10"/>
+        <title>万物皆可旋转(2023-01-01更新)</title>
+        <link rel="shortcut icon" href="./nugget.png"/>
+        <link rel="stylesheet" href="./style.css?20221231"/>
         <style id="animationset"></style>
     </head>
     <body id="body">
@@ -211,17 +13,21 @@
         <!--页面加载过程遮罩-->
         <div id="loadingMask" style="position:absolute;z-index:5;top:0px;left:0px;width:100%;height:100%;padding:30px;font-size:40px;font-weight:lighter;color:#888;background-color:#fff;">请稍候...</div>
 
-        <!--顶部上下晃动-->
-        <div id="headbox"></div>
-        <!--旋转物体-->
-        <div id="rotationbox"></div>
-        <!--阴影-->
-        <div id="shadowbox"></div>
-        <!--计时器-->
-        <div id="timer" style="background:rgba(17,69,20,0);color:rgba(0,0,0,1)">11:45:14</div>
+        <div id="mainbox" style="background:#fff">
+            <!--顶部上下晃动-->
+            <div id="headbox"></div>
+            <!--旋转物体-->
+            <div id="rotationbox"></div>
+            <!--阴影-->
+            <div id="shadowbox"></div>
+            <!--计时器-->
+            <div id="timer" style="background:rgba(17,69,20,0);color:rgba(0,0,0,1)">11:45:14</div>
+        </div>
 
+        <!--实验性：录屏内容临时截取至此-->
+        <canvas id="canv" height=480 width=640 style="display:none"></canvas>
 
-        <!--右上角选项按钮-->
+        <!--下滑打开选项提示-->
         <div id="tips" style="position:absolute;top:0px;left:0px;width:100%;height:100px;display:none;text-align:center;background:linear-gradient(180deg,#888 20%,rgba(0,0,0,0));color:#fff;font-size:16px;padding-top:5px">▼ 向下滑动或按“O”键进入选项&nbsp;&nbsp;<span style="text-decoration:underline;user-select:none;" onclick="sID('tips').remove();">关闭提示</span></div>
 
         <!--用户选项-->
@@ -261,7 +67,7 @@
             </div>
             <!--效果设置-->
             <hr>
-            旋转轴：<input type="radio" name="rotateRadio" id="rotateRadioX" value="X" onclick="anglechange()"/><label for="rotateRadioX">X</label>&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="rotateRadio" id="rotateRadioY" value="Y" checked onclick="anglechange()"/><label for="rotateRadioY">Y</label><hr>
+            旋转轴：<input type="radio" name="rotateRadio" id="rotateRadioX" value="X" onclick="anglechange()"/><label for="rotateRadioX">X</label>&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="rotateRadio" id="rotateRadioY" value="Y" checked onclick="anglechange()"/><label for="rotateRadioY">Y</label>&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="rotateRadio" id="rotateRadioZ" value="Z" onclick="anglechange()"/><label for="rotateRadioZ">Z</label><hr>
 
             <div class="name">X轴：</div><input id='Xanglerange' class="range" type='range' min='0' max='360' oninput="anglechange('xrange')"/><div style="display:inline-block"><input type="number" id='Xangleinput' class="input" value='0' oninput='anglechange()'/>°</div><hr>
 
@@ -271,18 +77,19 @@
 
             <div class="name">透视：</div><input id='perspectrange' class="range" type='range' min='0' max='1000' oninput="anglechange('prange')"/><div style="display:inline-block"><input type="number" id='perspectinput' class="input" value='500' oninput='anglechange()'/>像素</div><hr>
 
-            <div class="name">速度：</div><input id='speedrange' class="range" type='range' min='0' max='9999' oninput="anispeed('range')"/><div style="display:inline-block"><input type="number" id='speedinput' class="input" value='1.3' oninput='anispeed()'/>秒/转</div><hr>
+            <div class="name">速度：</div><input id='speedrange' class="range" type='range' min='0' max='9999' oninput="anispeed('range')" onmouseup="applySpeed()" ontouchend="applySpeed()"/><div style="display:inline-block"><input type="number" id='speedinput' class="input" value='1.3' oninput='anispeed()'/>秒/转</div><hr>
 
             <p style='margin-bottom:5px'>将透视调整至75~125可以提升图像或文字的立体感。</p>
             <div style="margin:10px 0px 5px 0px;">
                 <input type="checkbox" id="reverse_sw" onclick="reverse_shadow_sw()"/><label for="reverse_sw" style="margin-right:5px">反向</label>
                 <input type="checkbox" id="shadow_sw" onclick="reverse_shadow_sw()" checked/><label for="shadow_sw" style="margin-right:5px">阴影</label>
-                <input type="checkbox" id="shake_sw" onclick="anglechange()" checked/><label for="shake_sw" style="margin-right:5px">上下晃动</label>
+                <input type="checkbox" id="floating_sw" onclick="anglechange()" checked/><label for="floating_sw" style="margin-right:5px">上下浮动</label>
                 <input type="checkbox" id="fullscreen_sw" onclick="launchFullscreen(document.documentElement)"/><label for="fullscreen_sw">全屏</label>
             </div>
-            <button onclick="rgb_id='body';rgb_attribute='style.background';coloropt_init('bgimg')">更改背景</button>
+            <button onclick="rgb_id='mainbox';rgb_attribute='style.background';coloropt_init('bgimg')">更改背景</button>
+            <button onclick="alert('注意事项：\n目前该功能仍处于实验阶段，不能确保其稳定性。由于浏览器兼容性各有所异，部分浏览器可能无法录制或下载视频。\n\n由于该功能所依赖的第三方库对动画效果不完全支持，录制出的视频会缺失包括旋转在内的很多效果，且由于格式较为特殊(webm)，部分播放器或编辑软件可能无法打开。\n\n由于代码未完善，在录制过程中会消耗较多的系统资源，这可能会导致浏览器崩溃，甚至使系统无响应！\n建议你想清楚后果再继续。');sID('recordopt').style.display = 'block'">录制视频(实验)</button>
             <button onclick="sID('timeropt').style.display = 'block'">计时器</button>
-            <div style="display:inline-block;margin-top:7px;font-size:12px">由 BUGTeas 制作<br><a href="https://github.com/BUGTeas/nugget_speens_h5" target="_blank" style="font-size:15px">Github</a>&nbsp;&nbsp;<a href="https://www.bilibili.com/video/BV1xK411r7C3" target="_blank" style="font-size:15px">Bilibili</a></div>
+            <div style="text-align:center;margin-bottom:5px;font-size:12px">由 BUGTeas 制作<br><a href="https://github.com/BUGTeas/nugget_speens_h5" target="_blank" style="font-size:15px">Github</a>&nbsp;&nbsp;<a href="https://www.bilibili.com/video/BV1xK411r7C3" target="_blank" style="font-size:15px">Bilibili</a></div>
             <button class="bigButton" onclick="
                 loadtime();
                 sID('option').style.display = 'none';
@@ -316,9 +123,53 @@
                 <div>
                     <button class="window_button" onclick="rgb_id='timer';rgb_attribute='style.color';coloropt_init('x','opacity')">字体颜色</button><button class="window_button" onclick="rgb_id='timer';rgb_attribute='style.backgroundColor';coloropt_init('x','opacity')">背景颜色</button>
                 </div>
+                <div onclick="timer_optapply()">
+                    <input type="radio" name="timerformat" id="timer_HMS" value="h_m_s"><label for="timer_HMS">小时 : 分钟 : 秒</label><br>
+                    <input type="radio" name="timerformat" id="timer_HMSMs" value="h_m_s_ms" checked><label for="timer_HMSMs">小时 : 分钟 : 秒 : 毫秒</label><br>
+                    <input type="radio" name="timerformat" id="timer_MSMs" value="m_s_ms"><label for="timer_MSMs">分钟 : 秒 : 毫秒</label>
+                </div>
             </div>
         </div>
 
+        <!--实验性：视频录制设置界面-->
+        <div class="window_bg" id="recordopt">
+            <div style="height:calc(50% - 170px);"></div>
+            <div class="window" id="recordopt_window">
+                <div style="min-height:20px">
+                    <div style="font-size:15px;display:inline-block">录制视频</div>
+                    <button class="window_close" onclick="sID('recordopt').style.display = 'none'">×</button>
+                </div>
+                <div><input type="checkbox" id="record_enabled"/><label for="record_enabled"> 启用（实验性功能尚未完善）</label></div>
+                <div style="font-size:18px;margin:0">分辨率</div>
+                <div onclick="mainSizeApply()" style="font-size:12px;">
+                    <input type="radio" name="mainsize" id="mainsize_0" value="auto_auto" checked><label for="mainsize_0">适应窗口大小</label><br>
+                    <input type="radio" name="mainsize" id="mainsize_c" value="cust_cust"><label for="mainsize_c">自定义
+                        <input type="number" style="border:1px solid #888;width:50px" id="mainsizeCustWidth" oninput="mainSizeApply('cust')" value="114"/> × <input type="number" style="border:1px solid #888;width:50px" id="mainsizeCustHeight" oninput="mainSizeApply('cust')" value="514"/>
+                    </label>
+                    <p style="margin:2px;font-size:14px">4:3</p>
+                    <input type="radio" name="mainsize" id="mainsize_1" value="640_480"><label for="mainsize_1">640×480</label>
+                    <input type="radio" name="mainsize" id="mainsize_2" value="800_600"><label for="mainsize_2">800×600</label><br>
+                    <input type="radio" name="mainsize" id="mainsize_3" value="1024_768"><label for="mainsize_3">1024×768</label>
+                    <input type="radio" name="mainsize" id="mainsize_4" value="1280_960"><label for="mainsize_4">1280×960</label><br>
+                    <p style="margin:2px;font-size:14px">16:9</p>
+                    <input type="radio" name="mainsize" id="mainsize_5" value="640_360"><label for="mainsize_5">640×360(360P)</label>
+                    <input type="radio" name="mainsize" id="mainsize_6" value="854_480"><label for="mainsize_6">854×480(480P)</label><br>
+                    <input type="radio" name="mainsize" id="mainsize_7" value="1280_720"><label for="mainsize_7">1280×720(720P)</label>
+                    <input type="radio" name="mainsize" id="mainsize_8" value="1920_1080"><label for="mainsize_8">1920×1080(1080P)</label><br>
+                </div>
+            </div>
+        </div>
+
+        <!--实验性：视频录制停止界面-->
+        <div class="window_bg" id="recordstop">
+            <div style="height:calc(50% - 170px);"></div>
+            <div class="window" id="recordstop_window">
+                <div style="font-size:18px">是否结束录制？</div>
+                <div style="font-size:14px">所录制的视频将会以下载的方式保存，停止录制后请确认下载<br>(部分浏览器可能不兼容，导致无法下载)</div>
+                <button class="window_button" onclick="sID('recordstop').style.display = 'none'">取消</button><button class="window_button" onclick="sID('recordstop').style.display = 'none';recStatus = false;recStop.click();showOption();">停止</button>
+            </div>
+        </div>
+        
         <!--背景图片/颜色设置界面-->
         <div class="window_bg" id="rgbeditor">
             <div style="height:calc(50% - 170px);"></div>
@@ -371,455 +222,38 @@
 
         <!--颜色设置脚本-->
         <script type="text/javascript"src="./rgbeditor.js"></script>
-        
+
+        <!--实验性功能：录屏截取内容-->
+        <script src="http://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+
         <!--主脚本-->
+        <script type="text/javascript"src="./main.js?20230101"></script>
+
+        <!--调整布局脚本-->
+        <script type="text/javascript"src="./resize.js?20230101"></script>
+
+        <!--设置内容脚本-->
+        <script type="text/javascript"src="./applyContentTimer.js?20230101"></script>
+        
+        <!--初始化-->
         <script type="text/JavaScript">
-            
-            //简写document.getElementById
-            function sID(id){
-                return document.getElementById(id);
-            }
-
-            //下滑弹出选项
-            //排除不需要下滑手势的元素
-            sID("option").onmousedown = sID("timeropt").onmousedown = sID("rgbeditor").onmousedown = sID("option").ontouchstart = sID("timeropt").ontouchstart = sID("rgbeditor").ontouchstart = function(){
-                clickReaction = "none";
-            }
-            //鼠标
-            document.body.onmousedown = function(event){
-                if(typeof clickReaction=="undefined"){
-                    moveY = event.clientY;
-                    document.onmousemove = function(event){
-                        if(moveY+60<=event.clientY) showOption();
-                    }
-                    document.onmouseup = function(){
-                        document.onmousemove = false;
-                    }
-                    return false;
-                }
-                else delete clickReaction;
-            }
-            //触摸
-            document.body.ontouchstart = function(event){
-                if(typeof clickReaction=="undefined"){
-                    moveY = event.targetTouches[0].pageY;
-                    document.ontouchmove = function(event){
-                        if(moveY+60<=event.targetTouches[0].pageY) showOption();
-                    }
-                    document.ontouchend = function(){
-                        document.ontouchmove = false;
-                    }
-                    return false;
-                }
-                else delete clickReaction;
-            }
-
-            //按“O”键弹出选项
-            document.onkeydown = function(event){
-                if(event.keyCode==79) showOption();
-            }
-
-            //显示选项界面
-            function showOption(){
-                if(sID("option").style.display=="none"){
-                    sID("option").style.display = "block";
-                    if(sID("tips")) sID("tips").remove();
-                    applyresize();
-                }
-            }
-
-            //进入全屏
-            function launchFullscreen(element) {
-                var ele = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
-                if(ele) exitFullscreen();
-                else if (element.requestFullscreen) element.requestFullscreen();
-                else if (element.mozRequestFullScreen) element.mozRequestFullScreen();
-                else if (element.msRequestFullscreen) element.msRequestFullscreen();
-                else if (element.webkitRequestFullscreen) element.webkitRequestFullScreen();
-            }
-
-            //退出全屏
-            function exitFullscreen() {
-                if (document.exitFullscreen) document.exitFullscreen();
-                else if (document.mozExitFullScreen) document.mozExitFullScreen();
-                else if (document.msExitFullscreen) document.msExitFullscreen();
-                else if (document.webkitExitFullscreen) document.webkitExitFullScreen();
-            }
-
-            //检测窗口变化自动调整尺寸
-            lastsize = document.body.clientWidth - document.body.clientHeight;
-            lastboxsize = 0;
-            function autoresize(){
-                var newsize = document.body.clientWidth - document.body.clientHeight;
-                if(newsize!=lastsize) applyresize();
-                lastsize = newsize;
-                var showname = ["img","vid","text"];
-                for(i=0;i<showname.length;i++){
-                    if(sID("show" + showname[i])){
-                        var nowboxsize = sID("show" + showname[i]).clientWidth - sID("show" + showname[i]).clientHeight;
-                        if(nowboxsize!=lastboxsize) applyresize();
-                        lastboxsize = nowboxsize;
-                    }
-                }
-                setTimeout("autoresize()",25)
-                //当用户通过其他途径退出全屏后取消勾选全屏选项
-                var ele = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
-                if(ele) sID("fullscreen_sw").checked = true;
-                else sID("fullscreen_sw").checked = false;
-            }
-
-            //旋转框架尺寸
-            resizeCount = 1;
-            function applyresize(){
-                console.log("第 " + resizeCount + " 次调整尺寸");
-                resizeCount++
-                var rotationbox = sID("rotationbox");
-                var shadowbox = sID("shadowbox");
-                var winbody = document.body;
-                if(winbody.clientWidth>=360) sID("option").style.width = "320px";
-                else sID("option").style.width = "calc(100% - 40px)";
-                var showname = ["none","img","vid","text"];
-                for(i=0;i<showname.length;i++){
-                    if(showname[i]=="none") boxWidth = boxHeight = "300";
-                    else if(sID("show" + showname[i])){
-                        var show = sID("show" + showname[i]);
-                        boxWidth = show.clientWidth;
-                        boxHeight = show.clientHeight;
-                    }
-                }
-                rotationbox.style.width = shadowbox.style.width = boxWidth + "px";
-                rotationbox.style.height = boxHeight + "px";
-                shadowbox.style.height = boxHeight / 5 + "px";
-                document.title = "万物皆可旋转（" + rotationbox.style.width + " x " + rotationbox.style.height + "）";
-                headHeight = (winbody.clientHeight - rotationbox.clientHeight) / 2
-                if(winbody.clientWidth>=boxWidth + 400&&sID("option").style.display!="none"){
-                    var mgl = 190;
-                    var optStyle = "height:calc(100% - 40px);background-color:#c8c8c8;";
-                }
-                else{
-                    var mgl = 0;
-                    var optStyle = "min-height:auto;max-height:calc(100% - 40px);background:rgba(150,150,150,0.5);";
-                }
-                if(sID("option").style.display!="none") sID("option").style = optStyle;
-                rotationbox.style.marginLeft = shadowbox.style.marginLeft = ((winbody.clientWidth - rotationbox.clientWidth) / 2 - mgl)+ "px";
-                anglechange();
-            }
-            
-            //旋转框架角度/透视
-            function anglechange(mode,resize){
-                var xinput = sID("Xangleinput");
-                var xrange = sID("Xanglerange");
-                var yinput = sID("Yangleinput");
-                var yrange = sID("Yanglerange");
-                var zinput = sID("Zangleinput");
-                var zrange = sID("Zanglerange");
-                var pinput = sID("perspectinput");
-                var prange = sID("perspectrange");
-                var aniset = sID("animationset");
-                if(mode=="xrange") xinput.value = xrange.value - 180;
-                else if(mode=="yrange") yinput.value = yrange.value - 180;
-                else if(mode=="zrange") zinput.value = zrange.value - 180;
-                else if(mode=="prange") pinput.value = 1000 - prange.value;
-                else{
-                    xrange.value = Number(xinput.value) + 180;
-                    yrange.value = Number(yinput.value) + 180;
-                    zrange.value = Number(zinput.value) + 180;
-                    prange.value = 1000 - pinput.value;
-                }
-                //旋转轴
-                var rMod = "X";
-                if(sID("rotateRadioY").checked) var rMod = "Y";
-                //上下晃动距离
-                var shakeDistance = boxHeight / 10;
-                if(!sID("shake_sw").checked) var shakeDistance = 0;
-                //上下晃动阴影变化
-                var shdUpBlur = boxHeight / 7;
-                var shdDnBlur = boxHeight / 10;
-                if(!sID("shake_sw").checked) var shdDnBlur = shdUpBlur = boxHeight / 8.5;
-                //上下晃动阴影距离变化
-                var ShadowMargin = boxHeight / 5;
-                var shdUpMarg = ShadowMargin + shakeDistance;
-                var shdDnMarg = ShadowMargin - shakeDistance;
-                //上下晃动顶部高度变化
-                var headUpMarg = headHeight + shakeDistance;
-                var headDnMarg = headHeight - shakeDistance;
-                //应用动画
-                aniset.innerHTML = "" +
-                "@keyframes headanimation{0%{margin-top:" + headUpMarg + "px}50%{margin-top:" + headDnMarg + "px}100%{margin-top:" + headUpMarg + "px}}" +
-                "@keyframes shadowanimation{0%{filter:blur(" + shdDnBlur + "px);margin-top:" + shdDnMarg + "px}50%{filter:blur(" + shdUpBlur + "px);margin-top:" + shdUpMarg + "px}100%{filter:blur(" + shdDnBlur + "px);margin-top:" + shdDnMarg + "px}}" +
-                "@keyframes boxanimation{0%{transform:perspective(" + pinput.value + "px) rotate" + rMod + "(" + rotateAngle[0] + "deg) rotateX(" + xinput.value + "deg) rotateY(" + yinput.value + "deg) rotateZ(" + zinput.value + "deg)}100%{transform:perspective(" + pinput.value + "px) rotate" + rMod + "(" + rotateAngle[1] + "deg) rotateX(" + xinput.value + "deg) rotateY(" + yinput.value + "deg) rotateZ(" + zinput.value + "deg)}}"
-            }
-
-            //应用动画速度
-            function anispeed(mode){
-                var input = sID("speedinput");
-                var range = sID("speedrange")
-                if(mode=="range"){input.value = 10 - range.value / 1000;}
-                else{range.value = (10 - input.value) * 1000;}
-                sID("rotationbox").style.animation = "boxanimation " + input.value + "s infinite linear";
-                sID("shadowbox").style.animation = "shadowanimation " + input.value * 1.5 + "s infinite linear";;
-                sID("headbox").style.animation = "headanimation " + input.value * 1.5 + "s infinite linear";;
-            }
-
-            //阴影和正反转
-            function reverse_shadow_sw(mode){
-                if(sID("shadow_sw").checked) sID("shadowbox").style.background = "#555";
-                else sID("shadowbox").style.background = "rgba(0,0,0,0)";
-                if(sID("reverse_sw").checked) rotateAngle = [0,360];
-                else rotateAngle = [360,0];
-                if(mode!="load") anglechange();
-            }
-
-            //切换图片/视频/文本模式
-            function showmode(name){
-                if(name=="txtopt_sw") applytext();
-                else applyimgvid(name.substring(0,3));
-                var optList = sID("option").getElementsByClassName("optsw");
-                for(i=0;i<optList.length;i++){
-                    sID(optList[i].id.split("_")[0]).style.display = "none";
-                    sID(optList[i].id).style = "border-bottom:3px solid rgba(0,0,0,0)";
-                }
-                sID(name.substring(0,6)).style.display = "block";
-                sID(name).style = "font-weight:bold;border-bottom:3px solid royalblue";
-            }
-
-            //加载用户文件
-            function fileget(mode){
-                var file = anyimg.files[0];
-                function al(word){alert("请确保文件为" + word + "类型,否则将无法显示");}
-                if(imgOrVid=="img"){
-                    if(!/image\/\w+/.test(file.type)) al("图片")
-                    imgSrc = URL.createObjectURL(file);
-                }else if(imgOrVid=="vid"){
-                    if(!/video\/\w+/.test(file.type)) al("视频");
-                    vidSrc = URL.createObjectURL(file);
-                }
-                applyimgvid(imgOrVid);
-            }
-
-            //应用图片/视频
-            function applyimgvid(mode){
-                if(mode=="img") var element = "<img src='" + imgSrc + "' id='showimg'/>";
-                if(mode=="vid") var element = "<video style='background-color:rgba(95,95,95,0.7)' id='showvid' loop onclick='this.play()'><source src='" + vidSrc + "'></video>";
-                sID("rotationbox").innerHTML = element;
-                if(sID("showvid")) sID("showvid").play();
-                resizeImgVid(mode);
-                //用户导入文件
-                if(window.FileReader){
-                    imgOrVid = mode;
-                    anyimg = sID(mode + "FileInput");
-                    anyimg.addEventListener('change',fileget,false);
-                }else sID(mode + "opt_user").innerHTML = "您的浏览器不支持自定义文件。";
-            }
-
-            //调整图片/视频宽度
-            function resizeImgVid(mode,range){
-                var rge = sID(mode + "WidthRange");
-                var ipt = sID(mode + "WidthInput");
-                if(range=="range") ipt.value = rge.value;
-                else rge.value = ipt.value;
-                sID("show" + mode).style.width = ipt.value + "px";
-            }
-            
-            //应用文字
-            function applytext(mode){
-                if(sID("showimg")) sID("showimg").remove();
-                var sizeInput = sID("textsizeinput");
-                var sizeRange = sID("textsizerange");
-                var txtInput = sID("inputtext");
-                if(sID("showtext")) sID("showtext").innerHTML = txtInput.value;
-                else sID("rotationbox").innerHTML = "<div id='showtext'>" + txtInput.value + "</div>";
-                var txtSet = sID("showtext");
-                if(mode=="sizerange") sizeInput.value = sizeRange.value;
-                else sizeRange.value = sizeInput.value;
-                if(txtSet.style.color=="") var txtColor = "#000";
-                else var txtColor = txtSet.style.color;
-                if(txtSet.style.backgroundColor=="") var txtBg = "rgba(17,69,20,0)";
-                else var txtBg = txtSet.style.backgroundColor;
-                paddingSet = sizeInput.value / 4;
-                txtSet.style = "white-space:nowrap;float:left;font-size:" + sizeInput.value + "px;padding:" + paddingSet + "px;border-radius:" + paddingSet + "px;color:" + txtColor + ";background-color:" + txtBg;
-            }
-
-            //打开背景图片/颜色设置界面
-            function coloropt_init(bgimg_enable,opacity){
-                sID("rgbeditor").style.display = "block";
-                if(bgimg_enable=="bgimg"){
-                    sID("bgopt_sw").style.display = "inline"
-                    if(document.body.style.background.substring(0,3)=="url") coloropt_mode("bgimg_sw");
-                    else coloropt_mode("rgbedt_sw",opacity);
-                }
-                else{
-                    sID("bgopt_sw").style.display = "none"
-                    coloropt_mode("rgbedt_sw",opacity);
-                }
-            }
-
-            //切换背景图片/颜色模式
-            function coloropt_mode(name,opacity){
-                var optList = sID("bgopt_sw").getElementsByClassName("optsw");
-                for(i=0;i<optList.length;i++){
-                    sID(optList[i].id.split("_")[0]).style.display = "none";
-                    sID(optList[i].id).style = "border-bottom:3px solid rgba(0,0,0,0)";
-                }
-                if(name=="rgbedt_sw"){
-                    rgbeditor_initbyid(rgb_id,rgb_attribute,opacity);
-                    sID("rgbedt").style.display = "table";
-                }
-                else{
-                    bgimg_init();
-                    sID("bgimg").style.display = "block";
-                }
-                sID(name).style = "font-weight:bold;border-bottom:3px solid royalblue";
-            }
-
-            //导入背景图片
-            function bgimg_init(){
-                if(window.FileReader){
-                    anyimg = sID("bgimg_input");
-                    anyimg.addEventListener('change',bgimg_get,false);
-                }
-                else sID("bgimg").innerHTML = "您的浏览器不支持自定义图片。";
-                if(typeof(BgImg)!="undefined") bgimg_apply();
-            }
-
-            //加载背景图片
-            function bgimg_get(){
-                var file = anyimg.files[0];
-                if(!/image\/\w+/.test(file.type)) alert("请确保文件为图像类型,否则将无法显示");
-                BgImg = URL.createObjectURL(file);
-                bgimg_apply();
-            }
-
-            //应用背景图片
-            function bgimg_apply(){
-                document.body.style = "background:url(" + BgImg + ");background-size:cover;background-position:center";
-            }
-
-            //应用计时器样式
-            function timer_optapply(mode){
-                var weight = document.getElementsByName("timerweight");
-                var sizeInput = sID("timersizeinput");
-                var sizeRange = sID("timersizerange");
-                var timer = sID("timer");
-                for(var i=0;i<weight.length;i++){
-                    if(weight[i].checked) timer.style.fontWeight = weight[i].value;
-                }
-                if(sID("timer_enabled").checked) timer.style.display = "block";
-                else{timer.style.display = "none";timework = "disabled"}
-                if(mode=="sizerange") sizeInput.value = sizeRange.value;
-                else sizeRange.value = sizeInput.value;
-                timer.style.fontSize = sizeInput.value + "px";
-                timer.style.padding = timer.style.borderRadius = sizeInput.value / 5 + "px";
-            }
-
-            //计时器拖拽调整位置
-            var moveit = sID("timer");
-            moveit.style.top = moveit.style.left = "0px";
-            //鼠标
-            moveit.onmousedown = function(event){
-                clickReaction = "none";
-                moveX = event.clientX - moveit.offsetLeft;
-                moveY = event.clientY - moveit.offsetTop;
-                document.onmousemove = function(event){
-                    moveit.style.top = event.clientY - moveY + "px";
-                    moveit.style.left = event.clientX - moveX + "px";
-                }
-                document.onmouseup = function(){
-                    document.onmousemove = false;
-                }
-                return false;
-            }
-            //触摸
-            moveit.ontouchstart = function(event){
-                clickReaction = "none";
-                moveX = event.targetTouches[0].pageX - moveit.offsetLeft;
-                moveY = event.targetTouches[0].pageY - moveit.offsetTop;
-                document.ontouchmove = function(event){
-                    moveit.style.left = event.targetTouches[0].pageX - moveX + "px";
-                    moveit.style.top = event.targetTouches[0].pageY - moveY + "px";
-                }
-                document.ontouchend = function(){
-                    document.ontouchmove = false;
-                }
-                return false;
-            }
-
-            //计时器分/秒钟
-            function timeminsec(){
-                if(timework=="enabled") setTimeout("timeminsec()",1000);
-                secondnum++;
-                if(secondnum==60){
-                    minutenum++;
-                    secondnum = 0;
-                }
-                msnumx = 0;
-            }
-
-            //计时器0.01秒
-            function timems(){
-                if(timework=="enabled") setTimeout("timems()",10);
-                if(msnum==10) msnum = 0;
-                msnum++;
-            }
-
-            //计时器0.1秒
-            function timemsx(){
-                if(timework=="enabled") setTimeout("timemsx()",100);
-                msnumx++;
-                if(msnumx==10) msnumx = 0;
-                msnum = 0
-            }
-
-            //刷新计时器显示
-            function timedisplay(){
-                if(timework=="enabled"){
-                    if(String(minutenum).length==1) minutenum = "0" + minutenum;
-                    if(String(secondnum).length==1) secondnum = "0" + secondnum;
-                    sID("timer").innerHTML = minutenum + ":" + secondnum + ":" + msnumx + msnum;
-                    setTimeout("timedisplay()",1);
-                }
-            }
-            
-            //初始化计时器
-            readyTimeMode = 0;
-            function loadtime(timeMode,mode){
-                if(mode!="noreset"){
-                    timework = "disabled";
-                    readyCntdn = 3;
-                    readyTimeMode++;
-                    var timeMode = readyTimeMode;
-                }
-                if(readyCntdn==0){
-                    if(sID("timer").style.display!="none"){
-                        timework = "enabled";
-                        minutenum = secondnum = msnumx = msnum = 0;
-                        setTimeout("timeminsec()",1000);
-                        setTimeout("timemsx()",100);
-                        setTimeout("timems()",10);
-                        timedisplay();
-                    }
-                    if(sID('showvid')){
-                        var vid = sID('showvid');
-                        vid.currentTime = 0;
-                        vid.play();
-                    }
-                }
-                else{
-                    if(sID("timer").style.display!="none") sID("timer").innerHTML = readyCntdn + " 秒后开始";
-                    readyCntdn = readyCntdn - 1;
-                    setTimeout("if(" + timeMode + "==readyTimeMode) loadtime(" + timeMode + ",'noreset')",1000);
-                }
-            }
-
-            //初始化
             imgSrc = "./nugget.png?20221229"
             vidSrc = "./test.mp4"
             reverse_shadow_sw("load");
             timer_optapply('sizerange');
+            mainSizeApply("load");
+            setTimeout("mainSizeApply('load')",1000)
             autoresize();
             showmode("imgopt_sw");
             anispeed();
             sID("loadingMask").parentNode.removeChild(sID("loadingMask"));
+            function chkspd(mode){
+                if(mode=="up") sID("speedrange").value = Number(sID("speedrange").value) + 50;
+                else sID("speedrange").value = sID("speedrange").value - 50;
+                if(sID("speedrange").value==0) setTimeout("chkspd('up')",1);
+                else if(sID("speedrange").value==9999) setTimeout("chkspd()",1);
+                else setTimeout(function(){chkspd(mode)},1);
+            }
         </script>
     </body>
 </html>
