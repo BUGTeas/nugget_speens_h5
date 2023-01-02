@@ -163,9 +163,11 @@ function mainSizeApply(mode){
             }
             sID("canv").width = recWidth;
             sID("canv").height = recHeight;
-            ctx.fillStyle = '#114514';
-            ctx.fillRect(0, 0, recWidth, recHeight);
-            setRecorder();
+            if(typeof ctx!="undefined"){
+                ctx.fillStyle = '#114514';
+                ctx.fillRect(0, 0, recWidth, recHeight);
+            }
+            if(recorderWork) setRecorder();
             if(mode!="load") applyresize();
         }
     }

@@ -134,48 +134,4 @@ function bgimg_apply(){
     sID("mainbox").style.backgroundSize = "cover";
     sID("mainbox").style.backgroundPosition = "center";
 }
-
-//实验性功能：录屏
-canv = document.getElementById("canv");
-const ctx = canv.getContext('2d');
-function playCanvas(ctx){
-    if(recStatus==true) setTimeout(function(){playCanvas(ctx)},0);
-    html2canvas(document.getElementById("mainbox")).then(output => {
-    ctx.drawImage(output, 0, 0, recWidth, recHeight);
-    output.remove();
-    });
-}
-recStatus = false;
-function setRecorder(){
-    recAllChunks = [];
-    const stream = canv.captureStream(60); // 60 FPS recording
-    const recorder = new MediaRecorder(stream, {
-        mimeType: 'video/webm;codecs=h264'
-    });
-    recorder.ondataavailable = e => {
-        recAllChunks.push(
-            e.data
-        );
-    }
-    recStart = document.createElement("button");
-    recStop = document.createElement("button");
-    recStart.onclick = e => {
-        recorder.start(10);
-    }
-    recStop.onclick = e => {
-        recorder.stop();
-        recBlobDownload();
-    }
-}
-function recBlobDownload() {
-    const link = document.createElement('a');
-    link.style.display = 'none';
-    const fullBlob = new Blob(recAllChunks);
-    const downloadUrl = window.URL.createObjectURL(fullBlob);
-    link.href = downloadUrl;
-    link.download = 'media.mp4';
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    setRecorder();
-}
+recorderWork = false;

@@ -184,7 +184,7 @@ function loadtime(timeMode,mode,showmode){
             vid.currentTime = 0;
             vid.play();
         }
-        if(sID("record_enabled").checked==true){
+        if(recorderWork&&sID("record_enabled").checked==true){
             console.log("开始录制");
             recStatus = true;
             playCanvas(ctx);
