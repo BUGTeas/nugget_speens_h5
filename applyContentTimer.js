@@ -123,8 +123,8 @@ function timer_optapply(mode){
     for(var i=0;i<weight.length;i++){
         if(weight[i].checked) timerFormat = weight[i].value.split("_");
     }
-    if(timerFormat.length==4) document.getElementById("timer").innerHTML = "11:45:14:19";
-    else document.getElementById("timer").innerHTML = "11:45:14";
+    document.getElementById("timer").innerHTML = "11:45:14";
+    if(timerFormat.length==4) document.getElementById("timer").innerHTML += ":19";
 }
 
 //刷新计时器显示
@@ -179,9 +179,9 @@ function loadtime(timeMode,mode,showmode){
             startTime = new Date().getTime();
             timerRun(0,0,0);
         }else{
-            if(timerFormat.length==4) document.getElementById("timer").innerHTML = "11:45:14:19";
-            else document.getElementById("timer").innerHTML = "11:45:14";
-            document.getElementById("timer").style.display = "none";
+            timer.innerHTML = "11:45:14";
+            if(timerFormat.length==4) timer.innerHTML += ":19";
+            timer.style.display = "none";
         }
         if(document.getElementById('showvid')){
             var vid = document.getElementById('showvid');
@@ -201,6 +201,7 @@ function loadtime(timeMode,mode,showmode){
         readyCntdn = readyCntdn - 1;
         setTimeout(function(){
             if(timeMode==readyTimeMode&&optUI.style.display=="none") loadtime(timeMode,'noreset',showmode);
+            else if(timerFormat.length==4) timer.innerHTML = "11:45:14:19";
             else timer.innerHTML = "11:45:14";
             if(optUI.style.display!="none") timer.style.display = showmode;
         },1000);
