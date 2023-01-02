@@ -43,6 +43,11 @@
                 <p style='margin-bottom:5px'>如需换行，请使用“&lt;br&gt;”</p>
                 <textarea rows="5" id="inputtext" oninput="applytext()">旋转 の 页面</textarea>
                 <div><button onclick="rgb_id='showtext';rgb_attribute='style.color';coloropt_init('x','opacity')">字体颜色</button><button onclick="rgb_id='showtext';rgb_attribute='style.backgroundColor';coloropt_init('x','opacity')">背景颜色</button></div>
+                <div onclick="applytext()" style='margin-bottom:5px'>
+                    <input type="radio" name="txtweight" id="txt_lighter" value="lighter"><label for="txt_lighter">细体</label>
+                    <input type="radio" name="txtweight" id="txt_normal" value="normal" checked><label for="txt_normal">常规</label>
+                    <input type="radio" name="txtweight" id="txt_bolder" value="bolder"><label for="txt_bolder">加粗</label>
+                </div>
                 字体大小：<br><input id='textsizerange' class="range" type='range' min='0' max='360' value='72' oninput="applytext('sizerange')"/><div style="display:inline-block"><input type="number" id='textsizeinput' class="input" value="72" oninput='applytext()'/>像素</div>
             </div>
 
@@ -225,19 +230,19 @@
         <script type="text/javascript" src="./rgbeditor.js"></script>
 
         <!--实验性功能：录屏截取内容-->
-        <script src="http://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+        <script src="//html2canvas.hertzen.com/dist/html2canvas.js"></script>
 
         <!--主脚本-->
-        <script type="text/javascript" src="./main.js?20230101"></script>
+        <script type="text/javascript" src="./main.js?20230102"></script>
 
         <!--实验性功能：录屏-->
         <script type="text/javascript" src="./recordTest.js?20230102"></script>
         
         <!--调整布局脚本-->
-        <script type="text/javascript" src="./resize.js?20230101"></script>
+        <script type="text/javascript" src="./resize.js?20230102"></script>
 
         <!--设置内容脚本-->
-        <script type="text/javascript" src="./applyContentTimer.js?20230101"></script>
+        <script type="text/javascript" src="./applyContentTimer.js?20230102"></script>
         
         <!--初始化-->
         <script type="text/JavaScript">

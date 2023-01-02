@@ -50,7 +50,7 @@ document.onkeydown = function(event){
 //显示选项界面
 function showOption(){
     if(sID("option").style.display=="none"){
-        if(recStatus==true) sID("recordstop").style.display = "block";
+        if(recorderWork&&recStatus==true) sID("recordstop").style.display = "block";
         else{
             timework = "disabled";
             sID("option").style.display = "block";

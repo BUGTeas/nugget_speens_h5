@@ -55,6 +55,10 @@ function applytext(mode){
     var sizeInput = sID("textsizeinput");
     var sizeRange = sID("textsizerange");
     var txtInput = sID("inputtext");
+    var txtw = document.getElementsByName("txtweight");
+    for(i=0;i<txtw.length;i++){
+        if(txtw[i].checked) var txtw = txtw[i].value;
+    }
     if(sID("showtext")) sID("showtext").innerHTML = txtInput.value;
     else sID("rotationbox").innerHTML = "<div id='showtext'>" + txtInput.value + "</div>";
     var txtSet = sID("showtext");
@@ -65,7 +69,7 @@ function applytext(mode){
     if(txtSet.style.backgroundColor=="") var txtBg = "rgba(17,69,20,0)";
     else var txtBg = txtSet.style.backgroundColor;
     paddingSet = sizeInput.value / 4;
-    txtSet.style = "white-space:nowrap;float:left;font-size:" + sizeInput.value + "px;padding:" + paddingSet + "px;border-radius:" + paddingSet + "px;color:" + txtColor + ";background-color:" + txtBg;
+    txtSet.style = "white-space:nowrap;float:left;font-size:" + sizeInput.value + "px;font-weight:" + txtw + ";padding:" + paddingSet + "px;border-radius:" + paddingSet + "px;color:" + txtColor + ";background-color:" + txtBg;
 }
 
 //计时器拖拽调整位置
