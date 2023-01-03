@@ -5,9 +5,9 @@ function autoresize(){
     var newsize = document.body.clientWidth - document.body.clientHeight;
     if(newsize!=lastsize) applyresize();
     lastsize = newsize;
-    var showname = ["img","vid","text"];
+    var showname = ["img","vid","text","html"];
     for(i=0;i<showname.length;i++){
-        if(sID("show" + showname[i])){
+        if(cID("show" + showname[i])){
             var nowboxsize = sID("show" + showname[i]).clientWidth - sID("show" + showname[i]).clientHeight;
             if(nowboxsize!=lastboxsize) applyresize();
             lastboxsize = nowboxsize;
@@ -27,10 +27,10 @@ function applyresize(){
     var shadowbox = sID("shadowbox");
     var mainbox = sID("mainbox");
     var winbody = document.body;
-    var showname = ["none","img","vid","text"];
+    var showname = ["none","img","vid","text","html"];
     for(i=0;i<showname.length;i++){
         if(showname[i]=="none") boxWidth = boxHeight = "300";
-        else if(sID("show" + showname[i])){
+        else if(cID("show" + showname[i])){
             var show = sID("show" + showname[i]);
             boxWidth = show.clientWidth;
             boxHeight = show.clientHeight;
@@ -104,7 +104,7 @@ function anglechange(mode,resize){
     "@keyframes headanimation{0%,100%{margin-top:" + headUpMarg + "px;}50%{margin-top:" + headDnMarg + "px}}" +
     "@keyframes shadowanimation{0%,100%{filter:blur(" + shdDnBlur + "px);margin-top:" + shdDnMarg + "px}50%{filter:blur(" + shdUpBlur + "px);margin-top:" + shdUpMarg + "px}}" +
     "@keyframes boxanimation{" + boxSet[0] + rMod + "(" + rotateAngle[0] + boxSet[1] + "}10" + boxSet[0] + rMod + "(" + rotateAngle[1] + boxSet[1] + "}}";
-    sID("rotationbox").style.transformStyle = "preserve-3d";
+    //sID("rotationbox").style.transformStyle = "preserve-3d";
 }
 
 //应用动画速度
@@ -147,19 +147,19 @@ function mainSizeApply(mode){
                 var chipt = sID("mainsizeCustHeight");
                 if(cwipt.value=="") cwipt.value = "0";
                 if(chipt.value=="") chipt.value = "0";
-                sID("mainbox").style.width = cwipt.value + "px";
-                sID("mainbox").style.height = chipt.value + "px";
+                sID("mainbox").style.width = (cwipt.value / deviceDPR) + "px";
+                sID("mainbox").style.height = (chipt.value / deviceDPR) + "px";
                 recWidth = cwipt.value;
                 recHeight = chipt.value;
                 sID("mainsize_c").checked = true;
             }else if(mainSize[0]!="auto"){
-                sID("mainbox").style.width = mainSize[0] + "px";
-                sID("mainbox").style.height = mainSize[1] + "px";
+                sID("mainbox").style.width = (mainSize[0] / deviceDPR) + "px";
+                sID("mainbox").style.height = (mainSize[1] / deviceDPR) + "px";
                 recWidth = mainSize[0];
                 recHeight = mainSize[1];
             }else{
-                recWidth = sID("mainbox").clientWidth;
-                recHeight = sID("mainbox").clientHeight;
+                recWidth = sID("mainbox").clientWidth * deviceDPR;
+                recHeight = sID("mainbox").clientHeight * deviceDPR;
             }
             sID("canv").width = recWidth;
             sID("canv").height = recHeight;

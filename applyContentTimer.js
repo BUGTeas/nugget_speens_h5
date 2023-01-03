@@ -1,13 +1,14 @@
 //切换图片/视频/文本模式
 function showmode(name){
     if(name=="txtopt_sw") applytext();
+    else if(name=="htmlopt_sw") applyhtml();
     else applyimgvid(name.substring(0,3));
     var optList = sID("option").getElementsByClassName("optsw");
     for(i=0;i<optList.length;i++){
         sID(optList[i].id.split("_")[0]).style.display = "none";
         sID(optList[i].id).style = "border-bottom:3px solid rgba(0,0,0,0)";
     }
-    sID(name.substring(0,6)).style.display = "block";
+    sID(name.split("_")[0]).style.display = "block";
     sID(name).style = "font-weight:bold;border-bottom:3px solid royalblue";
 }
 
@@ -30,7 +31,7 @@ function applyimgvid(mode){
     if(mode=="img") var element = "<img src='" + imgSrc + "' id='showimg'/>";
     if(mode=="vid") var element = "<video style='background-color:rgba(95,95,95,0.7)' id='showvid' loop onclick='this.play()'><source src='" + vidSrc + "'></video>";
     sID("rotationbox").innerHTML = element;
-    if(sID("showvid")) sID("showvid").play();
+    setTimeout("if(cID('showvid')) sID('showvid').play()",500);
     resizeImgVid(mode);
     //用户导入文件
     if(window.FileReader){
@@ -46,7 +47,7 @@ function resizeImgVid(mode,range){
     var ipt = sID(mode + "WidthInput");
     if(range=="range") ipt.value = rge.value;
     else rge.value = ipt.value;
-    sID("show" + mode).style.width = ipt.value + "px";
+    sID("show" + mode).style.width = (ipt.value / deviceDPR) + "px";
 }
 
 //应用文字
@@ -59,8 +60,10 @@ function applytext(mode){
     for(i=0;i<txtw.length;i++){
         if(txtw[i].checked) var txtw = txtw[i].value;
     }
-    if(sID("showtext")) sID("showtext").innerHTML = txtInput.value;
-    else sID("rotationbox").innerHTML = "<div id='showtext'>" + txtInput.value + "</div>";
+    var iptvl = txtInput.value.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;');
+    console.log("文本模式，输出内容为 “" + iptvl + "”");
+    if(sID("showtext")) sID("showtext").innerHTML = iptvl;
+    else sID("rotationbox").innerHTML = "<div id='showtext'>" + iptvl + "</div>";
     var txtSet = sID("showtext");
     if(mode=="sizerange") sizeInput.value = sizeRange.value;
     else sizeRange.value = sizeInput.value;
@@ -68,8 +71,18 @@ function applytext(mode){
     else var txtColor = txtSet.style.color;
     if(txtSet.style.backgroundColor=="") var txtBg = "rgba(17,69,20,0)";
     else var txtBg = txtSet.style.backgroundColor;
-    paddingSet = sizeInput.value / 4;
-    txtSet.style = "white-space:nowrap;float:left;font-size:" + sizeInput.value + "px;font-weight:" + txtw + ";padding:" + paddingSet + "px;border-radius:" + paddingSet + "px;color:" + txtColor + ";background-color:" + txtBg;
+    paddingSet = sizeInput.value / 4 / deviceDPR;
+    txtSet.style = "white-space:nowrap;text-align:center;float:left;font-size:" + (sizeInput.value / deviceDPR) + "px;font-weight:" + txtw + ";padding:" + paddingSet + "px;border-radius:" + paddingSet + "px;color:" + txtColor + ";background-color:" + txtBg;
+}
+
+//应用代码
+function applyhtml(mode){
+    if(sID("showimg")) sID("showimg").remove();
+    var txtInput = sID("inputhtml");
+    var iptvl = txtInput.value;
+    console.log("代码模式，输出内容为 “" + iptvl + "”");
+    if(sID("showhtml")) sID("showhtml").innerHTML = iptvl;
+    else sID("rotationbox").innerHTML = "<div id='showhtml' style='white-space:nowrap;float:left'>" + iptvl + "</div>";
 }
 
 //计时器拖拽调整位置
@@ -117,8 +130,8 @@ function timer_optapply(mode){
     else{timer.style.display = "none";timework = "disabled"}
     if(mode=="sizerange") sizeInput.value = sizeRange.value;
     else sizeRange.value = sizeInput.value;
-    timer.style.fontSize = sizeInput.value + "px";
-    timer.style.padding = timer.style.borderRadius = sizeInput.value / 5 + "px";
+    timer.style.fontSize = (sizeInput.value / deviceDPR) + "px";
+    timer.style.padding = timer.style.borderRadius = (sizeInput.value / 5 / deviceDPR) + "px";
     var weight = document.getElementsByName("timerformat");
     for(var i=0;i<weight.length;i++){
         if(weight[i].checked) timerFormat = weight[i].value.split("_");
@@ -130,32 +143,36 @@ function timer_optapply(mode){
 //刷新计时器显示
 function timerRun(hcnt,mcnt,scnt){
     if(timework=="enabled"){
-        var hournum,minutenum,secondnum,msnum;
+        var hournum,minutenum,secondnum,msnum,optHead,optEnd;
         var timeNum = new Date().getTime() - startTime;
-        msnum = Number.parseInt(timeNum / 10 - scnt * 100);
-        if(msnum>=100){
-            scnt++;
-            msnum = 0;
+        if(timerFormat[timerFormat.length - 1]=="ms"){
+            msnum = Number.parseInt(timeNum / 10 - scnt * 100);
+            if(msnum>=100){
+                scnt++;
+                msnum = 0;
+            }
         }
         secondnum = Number.parseInt(timeNum / 1000 - mcnt * 60);
         if(secondnum>=60){
             mcnt++;
             secondnum = 0;
         }
-        minutenum = Number.parseInt(timeNum / 60000 - hcnt * 60);
-        if(minutenum>=60){
-            hcnt++;
-            minutenum = 0;
+        if(timerFormat[0]=="h"){
+            minutenum = Number.parseInt(timeNum / 60000 - hcnt * 60);
+            if(minutenum>=60){
+                hcnt++;
+                minutenum = 0;
+            }
+            hournum = Number.parseInt(timeNum / 3600000);
         }
-        hournum = Number.parseInt(timeNum / 3600000);
+        else minutenum = Number.parseInt(timeNum / 60000);
         if(String(hournum).length==1) hournum = "0" + hournum;
         if(String(minutenum).length==1) minutenum = "0" + minutenum;
         if(String(secondnum).length==1) secondnum = "0" + secondnum;
         if(String(msnum).length==1) msnum = "0" + msnum;
-        if(String(msnum).length==3) console.log(msnum);
-        if(timerFormat.length==4){optHead = hournum + ":";optEnd = ":" + msnum;}
-        else if(timerFormat[0]=="h"){optHead = hournum + ":";optEnd = "";}
-        else if(timerFormat[0]=="m"){optHead = "";optEnd = ":" + msnum;}
+        optHead = optEnd = "";
+        if(timerFormat[0]=="h") optHead = hournum + ":";
+        if(timerFormat[timerFormat.length - 1]=="ms") optEnd = ":" + msnum;
         document.getElementById("timer").innerHTML = optHead + minutenum + ":" + secondnum + optEnd;
         setTimeout(function(){timerRun(hcnt,mcnt,scnt)},0);
     }

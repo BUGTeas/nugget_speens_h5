@@ -3,9 +3,9 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=10"/>
-        <title>万物皆可旋转 (2023-01-02更新)</title>
+        <title>万物皆可旋转 (2023-01-03更新)</title>
         <link rel="shortcut icon" href="./nugget.png"/>
-        <link rel="stylesheet" href="./style.css?20221231"/>
+        <link rel="stylesheet" href="./style.css?20230103"/>
         <style id="animationset"></style>
     </head>
     <body id="body">
@@ -36,11 +36,13 @@
             <!--切换选项卡-->
             <div class="optsw" id="imgopt_sw" onclick="showmode(this.id)">图片</div>
             <div class="optsw" id="vidopt_sw" onclick="showmode(this.id)">视频</div>
-            <div class="optsw" id="txtopt_sw" onclick="showmode(this.id)">文本或 HTML</div>
+            <div class="optsw" id="txtopt_sw" onclick="showmode(this.id)">文本</div>
+            <div class="optsw" id="htmlopt_sw" onclick="showmode(this.id)">HTML</div>
 
-            <!--文字/代码设置界面-->
+            <!--文字设置界面-->
             <div id="txtopt">
-                <p style='margin-bottom:5px'>如需换行，请使用“&lt;br&gt;”</p>
+                <!--<p style='margin-bottom:5px'>如需换行，请使用“&lt;br&gt;”</p>-->
+                <p style='margin-bottom:5px'>此功能已更新，支持多个空格和回车换行，<br>如需使用 HTML 代码，请切换到 HTML 模式。</p>
                 <textarea rows="5" id="inputtext" oninput="applytext()">旋转 の 页面</textarea>
                 <div><button onclick="rgb_id='showtext';rgb_attribute='style.color';coloropt_init('x','opacity')">字体颜色</button><button onclick="rgb_id='showtext';rgb_attribute='style.backgroundColor';coloropt_init('x','opacity')">背景颜色</button></div>
                 <div onclick="applytext()" style='margin-bottom:5px'>
@@ -48,7 +50,13 @@
                     <input type="radio" name="txtweight" id="txt_normal" value="normal" checked><label for="txt_normal">常规</label>
                     <input type="radio" name="txtweight" id="txt_bolder" value="bolder"><label for="txt_bolder">加粗</label>
                 </div>
-                字体大小：<br><input id='textsizerange' class="range" type='range' min='0' max='360' value='72' oninput="applytext('sizerange')"/><div style="display:inline-block"><input type="number" id='textsizeinput' class="input" value="72" oninput='applytext()'/>像素</div>
+                字体大小：<br><input id='textsizerange' class="range" type='range' min='0' max='1000' oninput="applytext('sizerange')"/><div style="display:inline-block"><input type="number" id='textsizeinput' class="input" value="200" oninput='applytext()'/>像素</div>
+            </div>
+
+            <!--代码设置界面-->
+            <div id="htmlopt">
+                <p style='margin-bottom:5px'>在文本框中输入 HTML 代码以实现更多功能。</p>
+                <textarea rows="5" id="inputhtml" oninput="applyhtml()"><iframe src="//player.bilibili.com/player.html?aid=476300136&bvid=BV1xK411r7C3&cid=924744177&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="320" height="180"> </iframe></textarea>
             </div>
 
             <!--图片设置界面-->
@@ -58,7 +66,7 @@
                     <button class="bigButton" onclick="sID('imgFileInput').click()">＋ 选择本地文件</button>
                     <input id='imgFileInput' style="display:none" type='file'/>
                 </div>
-                <div class="name">宽度：</div><input id='imgWidthRange' class="range" type='range' min='0' max='500' value='150' oninput="resizeImgVid('img','range')"/><div style="display:inline-block"><input type="number" id='imgWidthInput' value='150' class="input" oninput="resizeImgVid('img')"/>像素</div>
+                <div class="name">宽度：</div><input id='imgWidthRange' class="range" type='range' min='0' max='1000' oninput="resizeImgVid('img','range')"/><div style="display:inline-block"><input type="number" id='imgWidthInput' value='300' class="input" oninput="resizeImgVid('img')"/>像素</div>
             </div>
             
             <!--视频设置界面-->
@@ -68,7 +76,7 @@
                     <button class="bigButton" onclick="sID('vidFileInput').click()">＋ 选择本地文件</button>
                     <input id='vidFileInput' style="display:none" type='file'/>
                 </div>
-                <div class="name">宽度：</div><input id='vidWidthRange' class="range" type='range' min='0' max='500' value='150' oninput="resizeImgVid('vid','range')"/><div style="display:inline-block"><input type="number" id='vidWidthInput' value='300' class="input" oninput="resizeImgVid('vid')"/>像素</div>
+                <div class="name">宽度：</div><input id='vidWidthRange' class="range" type='range' min='0' max='1000' oninput="resizeImgVid('vid','range')"/><div style="display:inline-block"><input type="number" id='vidWidthInput' value='500' class="input" oninput="resizeImgVid('vid')"/>像素</div>
             </div>
             <!--效果设置-->
             <hr>
@@ -116,7 +124,7 @@
                 <table style="width:100%;border-collapse:collapse;">
                     <tr>
                         <td class="rgbeditor_optname">大小</td>
-                        <td><input type="range" min='5' max='200' value="48" class="rgbeditor_range" id="timersizerange" oninput="timer_optapply('sizerange')"/></td>
+                        <td><input type="range" min='5' max='200' value="96" class="rgbeditor_range" id="timersizerange" oninput="timer_optapply('sizerange')"/></td>
                         <td><input type="number" class="rgbeditor_input" id="timersizeinput" oninput="timer_optapply()"/></td>
                     </tr>
                 </table>
@@ -229,20 +237,17 @@
         <!--颜色设置脚本-->
         <script type="text/javascript" src="./rgbeditor.js"></script>
 
-        <!--实验性功能：录屏截取内容-->
-        <script src="//html2canvas.hertzen.com/dist/html2canvas.js"></script>
-
         <!--主脚本-->
-        <script type="text/javascript" src="./main.js?20230102"></script>
+        <script type="text/javascript" src="./main.js?20230103"></script>
 
         <!--实验性功能：录屏-->
         <script type="text/javascript" src="./recordTest.js?20230102"></script>
         
         <!--调整布局脚本-->
-        <script type="text/javascript" src="./resize.js?20230102"></script>
+        <script type="text/javascript" src="./resize.js?20230103"></script>
 
         <!--设置内容/计时器脚本-->
-        <script type="text/javascript" src="./applyContentTimer.js?20230102a"></script>
+        <script type="text/javascript" src="./applyContentTimer.js?20230103"></script>
         
         <!--初始化-->
         <script type="text/JavaScript">
@@ -257,13 +262,10 @@
             anispeed();
             if(!recorderWork) sID('recordopt_tips').innerHTML = "当前浏览器不支持录制功能，但仍可以调节分辨率";
             sID("loadingMask").parentNode.removeChild(sID("loadingMask"));
-            function chkspd(mode){
-                if(mode=="up") sID("speedrange").value = Number(sID("speedrange").value) + 50;
-                else sID("speedrange").value = sID("speedrange").value - 50;
-                if(sID("speedrange").value==0) setTimeout("chkspd('up')",1);
-                else if(sID("speedrange").value==9999) setTimeout("chkspd()",1);
-                else setTimeout(function(){chkspd(mode)},1);
-            }
         </script>
+
+        <!--实验性功能：录屏截取内容-->
+        <script src="//html2canvas.hertzen.com/dist/html2canvas.js"></script>
+
     </body>
 </html>

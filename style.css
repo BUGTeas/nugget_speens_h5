@@ -102,7 +102,7 @@ html,body{
     font-weight:bolder;
 }
 /*文本选项大文本框*/
-#inputtext{
+#option textarea{
     border:1px solid #999;
     border-radius:7px;
     padding:5px;

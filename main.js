@@ -1,7 +1,12 @@
 //简写document.getElementById
 function sID(id){
+    if(document.getElementById(id)) return document.getElementById(id);
+    else console.log("不存在的元素ID：“" + id + "”");
+}
+function cID(id){
     return document.getElementById(id);
 }
+
 //下滑弹出选项
 //排除不需要下滑手势的元素
 sID("option").onmousedown = sID("timeropt").onmousedown = sID("rgbeditor").onmousedown = sID("recordopt").onmousedown = sID("recordstop").onmousedown = sID("option").ontouchstart = sID("timeropt").ontouchstart = sID("rgbeditor").ontouchstart = sID("recordopt").ontouchstart = sID("recordstop").ontouchstart = function(){
@@ -134,4 +139,5 @@ function bgimg_apply(){
     sID("mainbox").style.backgroundSize = "cover";
     sID("mainbox").style.backgroundPosition = "center";
 }
+deviceDPR = window.devicePixelRatio;
 recorderWork = false;
