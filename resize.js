@@ -8,9 +8,11 @@ function autoresize(){
     var showname = ["img","vid","text","html"];
     for(i=0;i<showname.length;i++){
         if(cID("show" + showname[i])){
-            var nowboxsize = sID("show" + showname[i]).clientWidth - sID("show" + showname[i]).clientHeight;
-            if(nowboxsize!=lastboxsize) applyresize();
-            lastboxsize = nowboxsize;
+            var nowboxsize = sID("show" + showname[i]).clientWidth + sID("show" + showname[i]).clientHeight;
+            if(nowboxsize!=lastboxsize){
+                applyresize();
+                lastboxsize = nowboxsize;
+            }
         }
     }
     setTimeout("autoresize()",25)
